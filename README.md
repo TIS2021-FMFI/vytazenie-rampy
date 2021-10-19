@@ -10,6 +10,8 @@
 
 3. Teraz je možné si nainštalovať potrebné knižnice. `pip install -r requirements.txt`
 
+4. V priečinku `src/main/` sa nachádza súbor `.env.default`, ktorý obsahuje základnú konfiguráciu pre Django. Duplikujte tento súbor a odstráňte z jeho názvu `.default`. Tak zabezpečíte, že Django načíta správne konfiguračné údaje. Do budúcna tu pribudne viacero vecí ako konfigurácia Postgres databázy, či cacheovacieho enginu. Tento mechanizmus zabezpečuje, že žiadne citlivé údaje sa nedostanú na verejný repozitár.
+
 ## Spustenie vývojárskeho serveru
 Django prichádza defaultne s vlastným serverom určeným na vývoj na lokálnom počítači. Tento server je možné zapnúť príkazom `python manage.py runserver`. Je potrebné byť v priečinku `./src`, kde sa nachádza súbor `manage.py`.
 
