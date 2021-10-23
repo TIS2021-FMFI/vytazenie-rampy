@@ -23,12 +23,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "accounts",
+    "main.apps.CustomAdminConfig",
 ]
 
 MIDDLEWARE = [
@@ -99,7 +100,7 @@ LANGUAGE_CODE = "sk"
 
 TIME_ZONE = "UTC"
 
-USE_I18N = False
+USE_I18N = True
 
 USE_L10N = True
 
@@ -116,5 +117,8 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STATIC_ROOT = BASE_DIR / "static"
-STATIC_URL = "static/"
+# STATIC_ROOT = BASE_DIR / "static/"
+STATICFILES_DIRS = (BASE_DIR / "static",)
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+LOGIN_REDIRECT_URL = "/"
