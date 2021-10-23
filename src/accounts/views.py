@@ -9,12 +9,15 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Úspešne ste boli prihlásený.')
+        messages.add_message(
+            self.request, messages.SUCCESS, "Úspešne ste boli prihlásený."
+        )
         return super().form_valid(form)
+
 
 def logout_view(request):
     if request.user.is_authenticated:
-        messages.add_message(request, messages.SUCCESS, 'Úspešne ste boli odhlásený.')
+        messages.add_message(request, messages.SUCCESS, "Úspešne ste boli odhlásený.")
 
     logout(request)
-    return redirect('login')
+    return redirect("login")
