@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "accounts",
+    "transports",
+    "modifications",
     "main.apps.CustomAdminConfig",
 ]
 
@@ -66,10 +68,15 @@ WSGI_APPLICATION = "main.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# todo pripoj si postgresql server, taktiez pozor ked mas UNIX
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "yourdb",
+        "USER": "youruser",
+        "PASSWORD": "yourpassword",
+        "HOST": "yourhost",
+        "PORT": "5432",
     }
 }
 

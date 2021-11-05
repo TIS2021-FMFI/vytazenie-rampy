@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for instance in object_list %}
+        <p>{{ instance.id }} - <a href="{{ instance.get_form }}">{{ instance.registration_number }}</a></p>
+    {% endfor %}
+{% endblock %}

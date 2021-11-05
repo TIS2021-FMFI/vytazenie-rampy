@@ -1,4 +1,7 @@
 from django.db import models
+from model_utils import FieldTracker
+from django.shortcuts import render
+from django.http import HttpRequest
 
 # Create your models here.
 class Transport(models.Model):
@@ -17,6 +20,14 @@ class Transport(models.Model):
     canceled = models.BooleanField("Zrušená", default=False)
     created = models.DateTimeField("Vytvorený", auto_now_add=True)
     modified = models.DateTimeField("Upravený", auto_now=True)
+
+    tracker = FieldTracker()
+
+    def get_form(self):
+        request = HttpRequest()
+        request.method = "POST"
+        request.POST.id = self.id
+        return render(request, "transports/form.html")
 
 
 class Gate(models.Model):
