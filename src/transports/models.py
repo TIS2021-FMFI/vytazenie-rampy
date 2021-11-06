@@ -23,12 +23,6 @@ class Transport(models.Model):
 
     tracker = FieldTracker()
 
-    def get_form(self):
-        request = HttpRequest()
-        request.method = "POST"
-        request.POST.id = self.id
-        return render(request, "transports/form.html")
-
 
 class Gate(models.Model):
     name = models.CharField("Brána", max_length=20)

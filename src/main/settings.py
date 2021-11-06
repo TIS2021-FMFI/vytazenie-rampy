@@ -70,14 +70,7 @@ WSGI_APPLICATION = "main.wsgi.application"
 
 # todo pripoj si postgresql server, taktiez pozor ked mas UNIX
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "yourdb",
-        "USER": "youruser",
-        "PASSWORD": "yourpassword",
-        "HOST": "yourhost",
-        "PORT": "5432",
-    }
+    "default": env.db(),
 }
 
 
