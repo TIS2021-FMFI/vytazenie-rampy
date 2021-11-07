@@ -1,7 +1,5 @@
 from django.db import models
 from model_utils import FieldTracker
-from django.shortcuts import render
-from django.http import HttpRequest
 
 # Create your models here.
 class Transport(models.Model):

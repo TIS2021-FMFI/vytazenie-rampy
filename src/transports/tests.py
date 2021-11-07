@@ -25,4 +25,3 @@ class TransportTestCase(TestCase):
             transport_priority,
             transport_status,
         )
-        self.fail("test_create_valid_transport() raised Exception")

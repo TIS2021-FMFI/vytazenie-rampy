@@ -2,6 +2,6 @@
 
 {% block content %}
     {% for instance in object_list %}
-        <p>{{ instance.id }} - <a href="{% url transports:form instance.id %}">{{ instance.registration_number }}</a></p>
+        <p>{{ instance.id }} - <a href="{% url 'transports:form' instance.id %}">{{ instance.registration_number }}</a></p>
     {% endfor %}
 {% endblock %}
