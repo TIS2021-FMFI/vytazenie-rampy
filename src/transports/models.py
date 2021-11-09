@@ -1,4 +1,5 @@
 from django.db import models
+from model_utils import FieldTracker
 
 # Create your models here.
 class Transport(models.Model):
@@ -17,6 +18,8 @@ class Transport(models.Model):
     canceled = models.BooleanField("Zrušená", default=False)
     created = models.DateTimeField("Vytvorený", auto_now_add=True)
     modified = models.DateTimeField("Upravený", auto_now=True)
+
+    tracker = FieldTracker()
 
 
 class Gate(models.Model):
