@@ -11,7 +11,7 @@ from django.views.generic import ListView
 # Create your views here.
 def form(request, pk):
     if request.method == "POST":
-        _form = TransportForm(request.POST)
+        _form = TransportForm(request.POST, instance=get_object_or_404(Transport, pk=pk))
         if _form.is_valid():
             obj = _form.save(commit=False)
             print(request.user)
