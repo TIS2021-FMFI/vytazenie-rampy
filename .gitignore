@@ -8,3 +8,6 @@ migrations
 
 src/db.sqlite3
 src/main/.env
+
+*.dot
+*.psd

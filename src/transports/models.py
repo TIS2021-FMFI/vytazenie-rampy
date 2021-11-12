@@ -5,8 +5,11 @@ from model_utils import FieldTracker
 class Transport(models.Model):
     registration_number = models.CharField("Evidenčné číslo vozidla", max_length=30)
     driver_name = models.CharField("Meno šoféra", max_length=50)
-    carrier = models.ForeignKey(
+    supplier = models.ForeignKey(
         "Supplier", on_delete=models.CASCADE, verbose_name="Dodávateľ"
+    )
+    carrier = models.ForeignKey(
+        "Carrier", on_delete=models.CASCADE, verbose_name="Prepravca"
     )
     process_start = models.DateTimeField("Začiatok spracovania")
     process_finish = models.DateTimeField("Koniec spracovania")
@@ -27,6 +30,10 @@ class Gate(models.Model):
 
 
 class Supplier(models.Model):
+    name = models.CharField("Názov", max_length=100)
+
+
+class Carrier(models.Model):
     name = models.CharField("Názov", max_length=100)
 
 

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "transports",
     "modifications",
     "main.apps.CustomAdminConfig",
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,8 @@ STATICFILES_DIRS = (BASE_DIR / "static",)
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_REDIRECT_URL = "/"
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
