@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_("email address"), blank=True, unique=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     username_validator = EmailValidator()
 
