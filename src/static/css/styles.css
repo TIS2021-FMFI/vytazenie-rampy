@@ -1,3 +1,28 @@
+:root {
+    --main-blue: #00538B;
+    --main-yellow: #FFCD00;
+    --secondary-blue: #0099D4;
+    --secondary-blue-light: #A3D8E7;
+    --secondary-green: #007D4A;
+    --secondary-green-light: #C2DDB0;
+    --secondary-orange: #EE9800;
+    --secondary-orange-light: #F5E6C9;
+    --secondary-red: #AE1022;
+    --secondary-red-light: #F1CDC5;
+    --secondary-purple: #7B67A8;
+    --secondary-purple-light: #BDB5DA;
+    --secondary-gray: #484D52;
+    --secondary-gray-light: #DAE0E3;
+}
+
+.bg-primary, .btn-primary {
+    background-color: var(--main-blue) !important;
+}
+
+body {
+    font-family: 'Exo', sans-serif;
+}
+
 .hover-shadow-large {
     transition: box-shadow 200ms ease;
 }
