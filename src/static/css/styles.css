@@ -30,3 +30,8 @@ body {
 .hover-shadow-large:hover {
     box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3) !important;
 }
+
+.neu-shadow {
+    box-shadow: 20px 20px 60px #004776,
+    -20px -20px 60px #005fa0;
+}
