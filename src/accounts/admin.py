@@ -16,6 +16,26 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "username",
     ]
+    list_display_links = ("first_name", "last_name", "email", "username")
+
+    prepopulated_fields = {"username": ("first_name", "last_name")}
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "username",
+                    "password1",
+                    "password2",
+                ),
+            },
+        ),
+    )
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
