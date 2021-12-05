@@ -52,3 +52,9 @@ tr:nth-child(odd) {
 .fc-scrollgrid-section-header {
     border: 1px solid black;
 }
+
+.event-ribbon {
+    display: inline-block;
+    padding: 2px 5px !important;
+    margin-bottom: 5px;
+}

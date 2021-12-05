@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     "modifications",
     "main.apps.CustomAdminConfig",
     "django_extensions",
-    "django_htmx"
+    "django_htmx",
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

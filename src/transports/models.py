@@ -1,8 +1,15 @@
+from typing import Union
+from datetime import datetime
+
 from django.db import models
 from model_utils import FieldTracker
+from dateutil import parser
 
-# Create your models here.
 class Transport(models.Model):
+    LOAD_COLOR = '#00538B'
+    UNLOAD_COLOR = '#EE9800'
+    BOTH_COLOR = '#7B67A8'
+
     registration_number = models.CharField("Evidenčné číslo vozidla", max_length=30)
     driver_name = models.CharField("Meno šoféra", max_length=50)
     supplier = models.ForeignKey(
@@ -24,27 +31,94 @@ class Transport(models.Model):
 
     tracker = FieldTracker()
 
+    class Meta:
+        verbose_name_plural = "Prepravy"
+        verbose_name = "Preprava"
+
+    @staticmethod
+    def find_objects_between_timestamps(start: Union[str, datetime], end: Union[str, datetime]):
+        """
+        Finds transports between specified datetimes.
+        """
+        if isinstance(start, str) and isinstance(end, str):
+            start = parser.parse(start)
+            end = parser.parse(end)
+
+        return Transport.objects.filter(process_start__gte=start, process_finish__lte=end)
+
+    def __str__(self):
+        start, end = self._format_datetime(self.process_start), self._format_datetime(self.process_finish)
+        return 'Preprava EČV ' + self.registration_number + ' od ' + start + ' do ' + end
+
+    def _format_datetime(self, datetime):
+        return datetime.strftime('%d. %m. %Y %H:%M')
+
+    @property
+    def color(self):
+        """
+        Returns background color of the transport according to load/unload flags set on the object.
+        Used by API serializer.
+        """
+        return self.BOTH_COLOR if self.load and self.unload else (self.LOAD_COLOR if self.load else self.UNLOAD_COLOR)
+
 
 class Gate(models.Model):
-    name = models.CharField("Brána", max_length=20)
+    name = models.CharField("Názov", max_length=20)
+
+    class Meta:
+        verbose_name_plural = "Brány"
+        verbose_name = "Brána"
+
+    def __str__(self):
+        return self.name
 
 
 class Supplier(models.Model):
     name = models.CharField("Názov", max_length=100)
 
+    class Meta:
+        verbose_name_plural = "Dodávatelia"
+        verbose_name = "Dodávateľ"
+
+    def __str__(self):
+        return self.name
+
 
 class Carrier(models.Model):
     name = models.CharField("Názov", max_length=100)
+
+    class Meta:
+        verbose_name_plural = "Dopravcovia"
+        verbose_name = "Dopravca"
+
+    def __str__(self):
+        return self.name
 
 
 class TransportPriority(models.Model):
     name = models.CharField("Názov", max_length=50)
     color = models.CharField("Farba", max_length=20)
+    font_color = models.CharField("Farba textu", max_length=20, default="#000000")
     sort = models.PositiveSmallIntegerField("Poradie")
     is_default = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural = "Priority prepráv"
+        verbose_name = "Priorita prepráv"
+
+    def __str__(self):
+        return self.name
 
 class TransportStatus(models.Model):
     name = models.CharField("Názov", max_length=30)
     color = models.CharField("Farba", max_length=20)
+    font_color = models.CharField("Farba textu", max_length=20, default="#000000")
+    sort = models.PositiveSmallIntegerField("Poradie")
     is_default = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name_plural = "Stavy prepráv"
+        verbose_name = "Stav prepráv"
+
+    def __str__(self):
+        return self.name

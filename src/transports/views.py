@@ -1,9 +1,9 @@
-import json
-
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
-from modifications.models import TransportModification
-from transports.models import Transport
+
 from .forms import TransportForm
+from .utils import TransportChangeTracker
+from transports.models import Transport
 
 
 from django.views.generic import ListView
@@ -13,42 +13,33 @@ def form(request, pk=None):
     Create new Transport and update existing one. Track changes made on Transports
     along with user who submitted them.
     """
+    form = None
+
     if request.method == "POST":
+        tracker = TransportChangeTracker(request.POST, get_object_or_404(Transport, pk=pk), request.user)
 
-        _form = TransportForm(
-            request.POST, instance=get_object_or_404(Transport, pk=pk)
-        )
+        if tracker.is_valid():
+            tracker.track()
+            messages.add_message(
+                request, messages.SUCCESS, "Preprava bola úspešne upravená."
+            )
+        else:
+            messages.add_message(
+                request, messages.ERROR, "Prepravu sa nepodarilo upraviť. Skontrolujte prosím vyplnené údaje."
+            )
 
-        if _form.is_valid():
-            obj = _form.save(commit=False)
-
-            if len(obj.tracker.changed()) > 0:
-
-                # track changes from form values
-                changes = {}
-                for field, value in obj.tracker.changed().items():
-                    changes[field] = {"BEFORE": value, "AFTER": getattr(obj, field)}
-
-                obj.save()
-
-                # create change log
-                TransportModification.objects.create(
-                    transport=obj,
-                    user=request.user,
-                    changes=json.dumps(
-                        changes, default=str
-                    ),  # default=str kedze datetime neni serializable
-                ).save()
-    else:
+        form = tracker.get_form()
         # get instance if primary key is provided
+
+    if form is None:
         try:
             inst = Transport.objects.get(pk)
         except TypeError:
             inst = None
 
-        _form = TransportForm(instance=inst)
+        form = TransportForm(instance=inst)
 
-    return render(request, "transports/form.html", {"form": _form})
+    return render(request, "transports/form.html", {"form": form})
 
 def week(request):
     return render(request, "transports/week.html")
