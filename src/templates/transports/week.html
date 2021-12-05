@@ -1,0 +1,56 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/fullcalendar/main.min.css' %}">
+<script src="{% static 'js/fullcalendar/main.min.js' %}"></script>
+{% endblock %}
+
+  {% block content %}
+  <div id="calendar" class="full-height"></div>
+
+  <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'timeGridWeek',
+          headerToolbar: {
+            start: null,
+            center: null,
+            end: null
+          },
+          locale: 'sk',
+          firstDay: 1,
+          allDaySlot: false,
+          slotLabelFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            omitZeroMinute: false,
+            meridiem: 'long'
+          },
+          themeSystem: 'bootstrap',
+          events: [ // TODO: fetch events from server
+            {
+              title  : 'event1',
+              start  : '2021-12-04T12:30:00',
+              end  : '2021-12-04T14:30:00',
+            },
+            {
+              title  : 'event2',
+              start  : '2021-12-04T18:00:00',
+              end  : '2021-12-04T15:30:00',
+            },
+            {
+              title  : 'event3',
+              start  : '2021-12-03T11:00:00',
+              end  : '2021-12-03T19:30:00',
+            }
+          ],
+          editable: true,
+          eventDurationEditable: true,
+          eventResizableFromStart: true
+        });
+        calendar.render();
+      });
+</script>
+{% endblock %}

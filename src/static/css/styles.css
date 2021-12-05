@@ -35,3 +35,20 @@ body {
     box-shadow: 20px 20px 60px #004776,
     -20px -20px 60px #005fa0;
 }
+
+.full-height {
+    height: 100vh;
+}
+
+.fc-timegrid tr {
+    height: 3em;
+}
+
+tr:nth-child(odd) {
+    border-color: var(--secondary-gray-light);
+    border-right-color: inherit;
+}
+
+.fc-scrollgrid-section-header {
+    border: 1px solid black;
+}
