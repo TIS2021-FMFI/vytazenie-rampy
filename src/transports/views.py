@@ -1,38 +1,48 @@
-import json
-
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
-from modifications.models import TransportModification
-from transports.models import Transport
+
 from .forms import TransportForm
+from .utils import TransportChangeTracker
+from transports.models import Transport
 
 
 from django.views.generic import ListView
 
-# Create your views here.
-def form(request, pk):
-    if request.method == "POST":
-        _form = TransportForm(
-            request.POST, instance=get_object_or_404(Transport, pk=pk)
-        )
-        if _form.is_valid():
-            obj = _form.save(commit=False)
-            print(request.user)
-            if len(obj.tracker.changed()) > 0:
-                changes = {}
-                for k, v in obj.tracker.changed().items():
-                    changes[k] = {"BEFORE": v, "AFTER": getattr(obj, k)}
-                obj.save()
-                TransportModification.objects.create(
-                    transport=obj,
-                    user=request.user,
-                    changes=json.dumps(
-                        changes, default=str
-                    ),  # default=str kedze datetime neni serializable
-                ).save()
-    else:
-        _form = TransportForm(instance=get_object_or_404(Transport, pk=pk))
+def form(request, pk=None):
+    """
+    Create new Transport and update existing one. Track changes made on Transports
+    along with user who submitted them.
+    """
+    form = None
 
-    return render(request, "transports/form.html", {"form": _form})
+    if request.method == "POST":
+        tracker = TransportChangeTracker(request.POST, get_object_or_404(Transport, pk=pk), request.user)
+
+        if tracker.is_valid():
+            tracker.track()
+            messages.add_message(
+                request, messages.SUCCESS, "Preprava bola úspešne upravená."
+            )
+        else:
+            messages.add_message(
+                request, messages.ERROR, "Prepravu sa nepodarilo upraviť. Skontrolujte prosím vyplnené údaje."
+            )
+
+        form = tracker.get_form()
+        # get instance if primary key is provided
+
+    if form is None:
+        try:
+            inst = Transport.objects.get(pk)
+        except TypeError:
+            inst = None
+
+        form = TransportForm(instance=inst)
+
+    return render(request, "transports/form.html", {"form": form})
+
+def week(request):
+    return render(request, "transports/week.html")
 
 
 class TransportListView(ListView):

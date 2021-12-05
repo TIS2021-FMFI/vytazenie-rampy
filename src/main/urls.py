@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from transports.views import TransportListView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
     path("", include("accounts.urls")),
     path("", include("django.contrib.auth.urls")),
-    path("", TransportListView.as_view()),
+
     path("transports/", include("transports.urls")),
+    path("api/", include("api.urls")),
 ]

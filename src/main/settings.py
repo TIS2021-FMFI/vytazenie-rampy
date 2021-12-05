@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     "modifications",
     "main.apps.CustomAdminConfig",
     "django_extensions",
+    "django_htmx",
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -43,6 +45,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_htmx.middleware.HtmxMiddleware"
 ]
 
 ROOT_URLCONF = "main.urls"

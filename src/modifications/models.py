@@ -7,3 +7,7 @@ class TransportModification(models.Model):
         "accounts.CustomUser", models.PROTECT, verbose_name="Používateľ"
     )
     changes = models.JSONField(verbose_name="Zmeny")
+
+    class Meta:
+        verbose_name = 'Zmena prepráv'
+        verbose_name_plural = 'Zmeny prepráv'
