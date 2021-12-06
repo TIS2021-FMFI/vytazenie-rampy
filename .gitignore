@@ -12,8 +12,8 @@ src/main/.env
 node_modules/
 package-lock.json
 
-static/js/main.js
-static/js/week.js
+src/static/js/main.js
+src/static/js/week.js
 static/js/fullcalendar
 static/css/fullcalendar
 
