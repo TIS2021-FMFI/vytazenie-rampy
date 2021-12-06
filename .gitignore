@@ -9,5 +9,13 @@ migrations
 src/db.sqlite3
 src/main/.env
 
+node_modules/
+package-lock.json
+
+src/static/js/main.js
+src/static/js/week.js
+static/js/fullcalendar
+static/css/fullcalendar
+
 *.dot
 *.psd
