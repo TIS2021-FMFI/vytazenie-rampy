@@ -1,13 +1,30 @@
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404
-
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView
 from .forms import TransportForm
 from .utils import TransportChangeTracker
 from transports.models import Transport
 
 
-from django.views.generic import ListView
 
+ADMIN = "Administrator"
+TML = "Transport manazment a Logistika"
+PREDAK = "Predak"
+SKLADNIK = "Skladnik"
+
+DEFAULT_VIEWS = {
+    ADMIN : "tabulka/",    
+    TML : "tyzden/",     
+    PREDAK : "tyzden/",     
+    SKLADNIK : "den/"        
+}
+
+@user_passes_test(lambda user: user.groups.filter(name__in=[ADMIN, TML, PREDAK, SKLADNIK]).exists())
+def view_based_on_user_group(request):
+    return redirect(DEFAULT_VIEWS[request.user.groups.all().first().name])      
+
+@user_passes_test(lambda user: user.groups.filter(name__in=[ADMIN, TML, PREDAK, SKLADNIK]).exists())
 def form(request, pk=None):
     """
     Create new Transport and update existing one. Track changes made on Transports
@@ -41,9 +58,22 @@ def form(request, pk=None):
 
     return render(request, "transports/form.html", {"form": form})
 
+
+@user_passes_test(lambda user: user.groups.filter(name__in=[ADMIN, TML, PREDAK]).exists())
 def week(request):
     return render(request, "transports/week.html")
 
+@user_passes_test(lambda user: user.groups.filter(name__in=[ADMIN, PREDAK, SKLADNIK]).exists())
+def day(request):
+    return render(request, "transports/day.html")
+
+@user_passes_test(lambda user: user.groups.filter(name__in=[ADMIN, PREDAK, SKLADNIK]).exists())
+def detail(request):
+    return render(request, "transports/detail.html")
+
+@user_passes_test(lambda user: user.groups.filter(name=ADMIN).exists())
+def table(request):
+    return render(request, "transports/table.html")
 
 class TransportListView(ListView):
     template_name = "transports/index.html"
