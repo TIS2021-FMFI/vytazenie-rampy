@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'Content-Type': 'application/json',
                     // csrf token is defined in the main.js file
-                    'X-CSRFToken': csrftoken
+                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify(eventData)
             }).then((res) => res.json())
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // get event description from transport data
 function getEventDescription(transport) {
-    carry = '<strong>' + transport.registration_number + '</strong><br>';
+    var carry = '<strong>' + transport.registration_number + '</strong><br>';
     carry += '<span class="event-ribbon" style="background-color: ' + transport.transport_priority.color + '; color: ' + transport.transport_priority.font_color + ';">' + transport.transport_priority.name + '</span><br>';
     carry += '<span class="event-ribbon" style="background-color: ' + transport.transport_status.color + '; color: ' + transport.transport_status.font_color + ';">' + transport.transport_status.name + '</span><br>';
     carry += 'Dodávateľ: ' + transport.supplier + '<br>';
