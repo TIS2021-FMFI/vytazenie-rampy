@@ -21,7 +21,7 @@ module.exports = [
     {
         input: 'src/resources/js/main.js',
         plugins: [
-            babel({ babelHelpers: 'bundled' }),
+            // babel({ babelHelpers: 'bundled' }),
         ],
         output: {
             file: 'src/static/js/main.js',
