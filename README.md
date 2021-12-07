@@ -9,7 +9,7 @@ Na spustenie projektu na lokálnom počítači je potrebný Python 3.7 a vyšši
 
 2. Keď je virtuálne prostredie vytvorené, je potrebné ho aktivovať.
     - MacOS/Linux - `source venv/bin/activate`
-    - Windows - `./venv/bin/Activate.ps1`
+    - Windows - `venv/Scripts/activate`
 
 3. Teraz je možné si nainštalovať potrebné knižnice. `pip install -r requirements.txt`
 
