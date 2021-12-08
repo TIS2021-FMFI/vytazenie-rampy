@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
@@ -40,7 +41,15 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
+class CustomGroupInline(admin.StackedInline):
+    model = CustomGroup
+
+class NewGroupAdmin(GroupAdmin):
+    inlines = GroupAdmin.inlines + [CustomGroupInline]
 
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(CustomGroup)
+
+admin.site.unregister(Group)
+admin.site.register(Group, NewGroupAdmin)
+
 admin.site.register(View)

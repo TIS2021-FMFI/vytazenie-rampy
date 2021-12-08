@@ -44,6 +44,10 @@ class View(models.Model):
         DEN = 'day', _('Deň')
         TABULKA = 'table', _('Tabuľka')
 
+    class Meta:
+        verbose_name = 'Pohľad'
+        verbose_name_plural = 'Pohľady'
+
     name = models.CharField('názov', max_length=30)
     view = models.CharField(
         max_length=10,
@@ -62,6 +66,10 @@ class CustomGroup(models.Model):
 
     def __str__(self):
         return self.group.name
+
+    class Meta:
+        verbose_name = 'Rozšírené možnosti skupiny'
+        verbose_name_plural = 'Rozšírené možnosti skupiny'
 
     def save(self):
         if self.pk:
