@@ -15,4 +15,4 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const csrftoken = getCookie('csrftoken');
+var csrftoken = getCookie('csrftoken');
