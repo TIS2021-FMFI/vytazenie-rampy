@@ -14,8 +14,8 @@ package-lock.json
 
 src/static/js/main.js
 src/static/js/week.js
-static/js/fullcalendar
-static/css/fullcalendar
+src/static/js/fullcalendar
+src/static/css/fullcalendar
 
 *.dot
 *.psd
