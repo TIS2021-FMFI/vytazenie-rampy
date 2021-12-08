@@ -1,6 +1,6 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -37,3 +37,37 @@ class CustomUser(AbstractUser):
             if self.first_name and self.last_name
             else self.username
         )
+
+class View(models.Model):
+    class ViewEnum(models.TextChoices):
+        WEEK = 'week', _('Týždeň')
+        DEN = 'day', _('Deň')
+        TABULKA = 'table', _('Tabuľka')
+
+    name = models.CharField('názov', max_length=30)
+    view = models.CharField(
+        max_length=10,
+        choices=ViewEnum.choices,
+        null=False,
+        blank=False
+    )
+
+    def __str__(self):
+        return self.name
+
+class CustomGroup(models.Model):
+    group = models.OneToOneField(Group, models.CASCADE, verbose_name='Skupina', related_name='custom_group')
+    allowed_views = models.ManyToManyField(View, verbose_name='Povolený pohľad', related_name='allowed_views')
+    default_view = models.ForeignKey(View, models.CASCADE, verbose_name='Východzí pohľad')
+
+    def __str__(self):
+        return self.group.name
+
+    def save(self):
+        if self.pk:
+            if self.allowed_views.all().count() == 0:
+                raise ValidationError('Skupina musí mať aspoň jeden povolený pohľad!')
+            elif self.allowed_views.filter(pk=self.default_view_id).count() == 0:
+                raise ValidationError('Východzí pohľad sa musí nachádzať v povolených pohľadoch!')
+
+        return super(CustomGroup, self).save()

@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+from .models import CustomUser, CustomGroup, View
 
 
 class CustomUserAdmin(UserAdmin):
@@ -35,7 +35,12 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
+        (_('Permissions'), {
+            'fields': ('is_superuser', 'groups', 'user_permissions'),
+        }),
     )
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CustomGroup)
+admin.site.register(View)

@@ -40,6 +40,15 @@ class CustomUserCreationForm(UserCreationForm):
         for field in self.disabled_fields:
             self.fields[field].widget.attrs["readonly"] = True
 
+    def clean(self):
+        cleaned_data = super(CustomUserCreationForm, self).clean()
+        groups = cleaned_data.get("groups", [])
+
+        if len(groups) != 1:
+            self.add_error('groups', 'Užívateľ musí byť zaradený do jednej užívateľskej skupiny!')
+            cleaned_data['groups'] = []
+
+        return cleaned_data
 
 class CustomUserChangeForm(UserChangeForm):
     password = ReadOnlyPasswordHashField(
@@ -54,3 +63,13 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ("username", "email")
+
+    def clean(self):
+        cleaned_data = super(CustomUserChangeForm, self).clean()
+        groups = cleaned_data.get("groups", [])
+
+        if len(groups) != 1:
+            self.add_error('groups', 'Užívateľ musí byť zaradený do jednej užívateľskej skupiny!')
+            cleaned_data['groups'] = []
+
+        return cleaned_data
