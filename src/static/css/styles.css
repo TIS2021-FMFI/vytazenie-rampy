@@ -58,3 +58,20 @@ tr:nth-child(odd) {
     padding: 2px 5px !important;
     margin-bottom: 5px;
 }
+
+#id_canceled:checked {
+    background-color: var(--secondary-red);
+    border-color: var(--secondary-red);
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_default, .xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current, .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div.xdsoft_current {
+    background: var(--main-blue) !important;
+}
+
+label {
+    display: block;
+}
+
+.notifyjs-corner {
+    z-index: 9999 !important;
+}

@@ -15,7 +15,9 @@ package-lock.json
 src/static/js/main.js
 src/static/js/week.js
 src/static/js/fullcalendar
+src/static/js/datetimepicker
 src/static/css/fullcalendar
+src/static/css/datetimepicker
 
 *.dot
 *.psd

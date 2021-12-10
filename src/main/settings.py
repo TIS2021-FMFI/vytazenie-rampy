@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "main.apps.CustomAdminConfig",
     "django_extensions",
     "django_htmx",
-    'rest_framework'
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -45,7 +45,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_htmx.middleware.HtmxMiddleware"
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = "main.urls"
@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "sk"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Prague"
 
 USE_I18N = True
 

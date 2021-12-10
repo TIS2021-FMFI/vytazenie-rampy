@@ -21,10 +21,8 @@ from transports.views import form, week, day, detail, table, view_based_on_user_
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-
     path("", include("accounts.urls")),
     path("", include("django.contrib.auth.urls")),
-
     path("", view_based_on_user_group, name="view_based_on_user_group"),
     path("form/", form, name="form-creation"),
     path("form/<int:pk>", form, name="form"),
@@ -32,6 +30,5 @@ urlpatterns = [
     path("den/", day, name="day"),
     path("detail/", detail, name="detail"),
     path("tabulka/", table, name="table"),
-    
     path("api/", include("api.urls")),
 ]

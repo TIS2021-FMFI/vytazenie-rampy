@@ -1,5 +1,5 @@
 // used to inject csrf token into post requests
-function getCookie(name) {
+export default function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -14,5 +14,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-var csrftoken = getCookie('csrftoken');

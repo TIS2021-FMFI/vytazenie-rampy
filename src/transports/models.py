@@ -1,14 +1,16 @@
 from typing import Union
 from datetime import datetime
+from django.core.exceptions import ValidationError
 
 from django.db import models
 from model_utils import FieldTracker
 from dateutil import parser
 
+
 class Transport(models.Model):
-    LOAD_COLOR = '#00538B'
-    UNLOAD_COLOR = '#EE9800'
-    BOTH_COLOR = '#7B67A8'
+    LOAD_COLOR = "#00538B"
+    UNLOAD_COLOR = "#EE9800"
+    BOTH_COLOR = "#7B67A8"
 
     registration_number = models.CharField("Evidenčné číslo vozidla", max_length=30)
     driver_name = models.CharField("Meno šoféra", max_length=50)
@@ -26,6 +28,9 @@ class Transport(models.Model):
     transport_status = models.ForeignKey("TransportStatus", models.CASCADE)
     gate = models.ForeignKey("Gate", models.CASCADE, null=True, blank=True)
     canceled = models.BooleanField("Zrušená", default=False)
+    note = models.CharField(
+        "Poznámka", blank=True, null=False, default="", max_length=100
+    )
     created = models.DateTimeField("Vytvorený", auto_now_add=True)
     modified = models.DateTimeField("Upravený", auto_now=True)
 
@@ -36,7 +41,9 @@ class Transport(models.Model):
         verbose_name = "Preprava"
 
     @staticmethod
-    def find_objects_between_timestamps(start: Union[str, datetime], end: Union[str, datetime]):
+    def find_objects_between_timestamps(
+        start: Union[str, datetime], end: Union[str, datetime]
+    ):
         """
         Finds transports between specified datetimes.
         """
@@ -44,14 +51,20 @@ class Transport(models.Model):
             start = parser.parse(start)
             end = parser.parse(end)
 
-        return Transport.objects.filter(process_start__gte=start, process_finish__lte=end)
+        return Transport.objects.filter(
+            process_start__gte=start, process_finish__lte=end
+        )
 
     def __str__(self):
-        start, end = self._format_datetime(self.process_start), self._format_datetime(self.process_finish)
-        return 'Preprava EČV ' + self.registration_number + ' od ' + start + ' do ' + end
+        start, end = self._format_datetime(self.process_start), self._format_datetime(
+            self.process_finish
+        )
+        return (
+            "Preprava EČV " + self.registration_number + " od " + start + " do " + end
+        )
 
     def _format_datetime(self, datetime):
-        return datetime.strftime('%d. %m. %Y %H:%M')
+        return datetime.strftime("%d. %m. %Y %H:%M")
 
     @property
     def color(self):
@@ -59,7 +72,19 @@ class Transport(models.Model):
         Returns background color of the transport according to load/unload flags set on the object.
         Used by API serializer.
         """
-        return self.BOTH_COLOR if self.load and self.unload else (self.LOAD_COLOR if self.load else self.UNLOAD_COLOR)
+        return (
+            self.BOTH_COLOR
+            if self.load and self.unload
+            else (self.LOAD_COLOR if self.load else self.UNLOAD_COLOR)
+        )
+
+    def clean(self):
+        if self.process_finish <= self.process_start:
+            raise ValidationError(
+                {
+                    "process_finish": "Spracovanie prepravy musí skončiť neskôr ako jej začiatok."
+                }
+            )
 
 
 class Gate(models.Model):
@@ -108,6 +133,7 @@ class TransportPriority(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class TransportStatus(models.Model):
     name = models.CharField("Názov", max_length=30)
