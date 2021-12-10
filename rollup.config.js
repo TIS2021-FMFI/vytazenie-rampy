@@ -1,5 +1,4 @@
-import copy from 'rollup-plugin-copy'
-import { babel } from '@rollup/plugin-babel';
+import copy from 'rollup-plugin-copy';
 
 module.exports = [
     {
@@ -10,6 +9,9 @@ module.exports = [
                     { src: 'node_modules/fullcalendar/*.js', dest: 'src/static/js/fullcalendar' },
                     { src: ['node_modules/fullcalendar/*.css'], dest: 'src/static/css/fullcalendar' },
                     { src: ['node_modules/fullcalendar/locales/*.js'], dest: 'src/static/js/fullcalendar/locales' },
+
+                    { src: 'node_modules/jquery-datetimepicker/build/*.js', dest: 'src/static/js/datetimepicker' },
+                    { src: ['node_modules/jquery-datetimepicker/build/*.css'], dest: 'src/static/css/datetimepicker' },
                 ]
             })
         ],
@@ -20,9 +22,6 @@ module.exports = [
     },
     {
         input: 'src/resources/js/main.js',
-        plugins: [
-            // babel({ babelHelpers: 'bundled' }),
-        ],
         output: {
             file: 'src/static/js/main.js',
             format: 'iife'

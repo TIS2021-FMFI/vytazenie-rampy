@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/TIS2021-FMFI/vytazenie-rampy#readme",
   "dependencies": {
-    "fullcalendar": "^5.10.1"
+    "fullcalendar": "^5.10.1",
+    "jquery-datetimepicker": "^2.5.21"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@rollup/plugin-babel": "^5.3.0",
     "rollup": "^2.60.2",
     "rollup-plugin-copy": "^3.4.0"
   }
