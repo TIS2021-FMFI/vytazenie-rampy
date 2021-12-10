@@ -6,12 +6,14 @@ from transports.models import Transport, TransportPriority, TransportStatus
 class TransportPrioritySerializer(serializers.ModelSerializer):
     class Meta:
         model = TransportPriority
-        fields = '__all__'
+        fields = "__all__"
+
 
 class TransportStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransportStatus
-        fields = '__all__'
+        fields = "__all__"
+
 
 class TransportSerializer(serializers.ModelSerializer):
     supplier = serializers.StringRelatedField()
@@ -23,5 +25,4 @@ class TransportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transport
-        exclude = ['created', 'modified']
-
+        exclude = ["created", "modified"]

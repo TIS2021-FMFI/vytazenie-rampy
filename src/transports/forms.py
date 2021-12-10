@@ -1,13 +1,17 @@
 from django import forms
 from .models import Transport
 
-default_attrs = {
-    forms.Select : {'class': 'form-select', 'autocomplete': False}
-}
+default_attrs = {forms.Select: {"class": "form-select", "autocomplete": False}}
+
 
 class TransportForm(forms.ModelForm):
-    process_start = forms.DateTimeField(widget=forms.widgets.DateTimeInput(format="%d.%m.%Y %H:%M:%S"))
-    process_finish = forms.DateTimeField(widget=forms.widgets.DateTimeInput(format="%d.%m.%Y %H:%M:%S"))
+    process_start = forms.DateTimeField(
+        widget=forms.widgets.DateTimeInput(format="%d.%m.%Y %H:%M:%S")
+    )
+    process_finish = forms.DateTimeField(
+        widget=forms.widgets.DateTimeInput(format="%d.%m.%Y %H:%M:%S")
+    )
+
     class Meta:
         model = Transport
         exclude = ["created", "modified"]
@@ -17,9 +21,11 @@ class TransportForm(forms.ModelForm):
 
         for field in self.fields:
             try:
-                self.fields[field].widget.attrs = default_attrs[self.fields[field].widget.__class__]
+                self.fields[field].widget.attrs = default_attrs[
+                    self.fields[field].widget.__class__
+                ]
             except KeyError:
-                self.fields[field].widget.attrs = {'class': 'form-control'}
+                self.fields[field].widget.attrs = {"class": "form-control"}
 
     def is_valid(self):
         is_valid = super(TransportForm, self).is_valid()
@@ -29,5 +35,5 @@ class TransportForm(forms.ModelForm):
                 if not self.errors.get(field):
                     continue
 
-                self.fields[field].widget.attrs['class'] += ' is-invalid'
+                self.fields[field].widget.attrs["class"] += " is-invalid"
         return is_valid

@@ -36,16 +36,22 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
-        (_('Permissions'), {
-            'fields': ('is_superuser', 'groups', 'user_permissions'),
-        }),
+        (
+            _("Permissions"),
+            {
+                "fields": ("is_superuser", "groups", "user_permissions"),
+            },
+        ),
     )
+
 
 class CustomGroupInline(admin.StackedInline):
     model = CustomGroup
 
+
 class NewGroupAdmin(GroupAdmin):
     inlines = GroupAdmin.inlines + [CustomGroupInline]
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 

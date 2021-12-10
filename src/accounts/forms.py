@@ -45,10 +45,13 @@ class CustomUserCreationForm(UserCreationForm):
         groups = cleaned_data.get("groups", [])
 
         if len(groups) != 1:
-            self.add_error('groups', 'Užívateľ musí byť zaradený do jednej užívateľskej skupiny!')
-            cleaned_data['groups'] = []
+            self.add_error(
+                "groups", "Užívateľ musí byť zaradený do jednej užívateľskej skupiny!"
+            )
+            cleaned_data["groups"] = []
 
         return cleaned_data
+
 
 class CustomUserChangeForm(UserChangeForm):
     password = ReadOnlyPasswordHashField(
@@ -69,7 +72,9 @@ class CustomUserChangeForm(UserChangeForm):
         groups = cleaned_data.get("groups", [])
 
         if len(groups) != 1:
-            self.add_error('groups', 'Užívateľ musí byť zaradený do jednej užívateľskej skupiny!')
-            cleaned_data['groups'] = []
+            self.add_error(
+                "groups", "Užívateľ musí byť zaradený do jednej užívateľskej skupiny!"
+            )
+            cleaned_data["groups"] = []
 
         return cleaned_data

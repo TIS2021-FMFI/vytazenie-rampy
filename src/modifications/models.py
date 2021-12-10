@@ -10,5 +10,5 @@ class TransportModification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Zmena prepráv'
-        verbose_name_plural = 'Zmeny prepráv'
+        verbose_name = "Zmena prepráv"
+        verbose_name_plural = "Zmeny prepráv"

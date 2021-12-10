@@ -4,6 +4,7 @@ from django.forms.models import model_to_dict
 from .forms import TransportForm
 from modifications.models import TransportModification
 
+
 class TransportChangeTracker:
     save_instance = True
 
