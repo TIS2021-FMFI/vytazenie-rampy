@@ -5,6 +5,8 @@
 Na spustenie projektu na lokálnom počítači je potrebný Python 3.7 a vyššie, Node.js verziu 14 a vyššie.
 
 ## Inštalácia projektu
+0. Najjednoduchšia inštalácia projektu je prostredníctvom priloženého skriptu `install.sh`. Spustením skriptu sa vám nainicializuje celý projekt, prebehne inštalácia knižníc na beh backendu, frontendu, prebehne konfigurácia databázového spojenia a spustia sa databázové migrácie.
+
 1. Najprv je potrebné vytvoriť si virtuálne prostredie pre inštaláciu potrebných knižníc. `python -m venv venv` _(Pre niektoré operačné systémy je potrebné použiť namiesto `python` príkaz `python3`)_
 
 2. Keď je virtuálne prostredie vytvorené, je potrebné ho aktivovať.
