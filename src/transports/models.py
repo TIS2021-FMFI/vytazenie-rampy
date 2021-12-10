@@ -1,5 +1,6 @@
 from typing import Union
 from datetime import datetime
+from django.core.exceptions import ValidationError
 
 from django.db import models
 from model_utils import FieldTracker
@@ -26,6 +27,7 @@ class Transport(models.Model):
     transport_status = models.ForeignKey("TransportStatus", models.CASCADE)
     gate = models.ForeignKey("Gate", models.CASCADE, null=True, blank=True)
     canceled = models.BooleanField("Zrušená", default=False)
+    note = models.CharField("Poznámka", blank=True, null=False, default="", max_length=100)
     created = models.DateTimeField("Vytvorený", auto_now_add=True)
     modified = models.DateTimeField("Upravený", auto_now=True)
 
@@ -60,6 +62,11 @@ class Transport(models.Model):
         Used by API serializer.
         """
         return self.BOTH_COLOR if self.load and self.unload else (self.LOAD_COLOR if self.load else self.UNLOAD_COLOR)
+
+    def clean(self):
+        if self.process_finish <= self.process_start:
+            raise ValidationError(
+                {'process_finish': "Spracovanie prepravy musí skončiť neskôr ako jej začiatok."})
 
 
 class Gate(models.Model):

@@ -1,5 +1,10 @@
+import getCookie from './main';
 
 document.addEventListener('DOMContentLoaded', function () {
+    var modalEl = document.querySelector('#modal');
+    var modal = new bootstrap.Modal(modalEl);
+    modal.hide();
+
     // used for time where the calendar is initially scrolled at
     var date = new Date();
     date.setHours(date.getHours() - 1);
@@ -43,10 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             return eventArray;
         },
+        displayEventTime: true,
         eventContent: function (eventInfo) {
             // normally the event title gets escaped,
             // so this way we can display html in the event's body
-            return { html: eventInfo.event.extendedProps.customHtml }
+            var htmlWrapper = '<div class="p-1">' + eventInfo.timeText + '<br>' + eventInfo.event.extendedProps.customHtml + '</div>';
+            return { html: htmlWrapper }
         },
         eventChange: function (changeInfo) {
             // gets called when any event is changed (moved, shortened, ...)
@@ -76,10 +83,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     $.notify(data.msg, data.status ? 'success' : 'error');
                 })
         },
+        eventClick: function (eventClickInfo) {
+            var transportId = eventClickInfo.event.extendedProps.transport_id;
+
+            htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
+            document.addEventListener('htmx:afterSettle', () => {
+                modal.show()
+            }, { once: true });
+        },
         scrollTime: date.toTimeString(),
         editable: true,
         eventDurationEditable: true,
         eventResizableFromStart: true
+    });
+
+    document.addEventListener('transportSaved', function () {
+        modal.hide();
+
+        setTimeout(() => {
+            calendar.refetchEvents();
+        }, 300);
     });
 
     calendar.render();

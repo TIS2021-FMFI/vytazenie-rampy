@@ -19,6 +19,9 @@ class TransportChangeTracker:
         self.form = TransportForm(data, instance=instance)
         self.user = user
 
+    def get_form(self):
+        return self.form
+
     def is_valid(self):
         return self.form.is_valid()
 
