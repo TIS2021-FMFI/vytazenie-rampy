@@ -1,1 +1,49 @@
 <!-- Good luck! -->
+<!-- ked tak fix piktogramy -->
+<div class="horna_navigacia">
+    <div class="kalendar_cast">
+        <img src="{% static 'images/calendar.svg' %}" alt="logo_calendar" class="piktogram">
+        <a href="#">
+            <img src="{% static 'images/arrow_left.svg' %}" alt="arrow_left" class="piktogram">
+        </a>
+        <div class="week-day_text">
+            24.11.2021
+            -
+            31.11.2021
+        </div>
+        <a href="#">
+            <img src="{% static 'images/arrow_right.svg' %}" alt="arrow_right" class="piktogram">
+        </a>
+        |
+        <div class="dnes_text">
+            <a href="#" class="a_dnes_text">
+                dnes
+            </a>
+        </div>   
+    </div>
+    <div class="prava_cast">
+        <div class="text_cast">
+            <!-- Treba este dorobit zobrazovanie iba pre specificke skupiny-->
+            <a href="{% url 'form-creation' %}" class="clicable_text_inside">
+                Pridaj prepravu
+            </a>
+            <div class="dropdown">
+                <span>Stránky</span>
+                <div class="dropdown_item">
+                    <a href="{% url 'week' %}">Týždenný pohľad</a>
+                    <a href="{% url 'day' %}">Denný pohľad</a>
+                    <a href="{% url 'table' %}">Tabuľkový pohľad</a>
+                </div>
+            </div>
+            <a href="{% url 'admin/' %}" class="clicable_text_inside">
+                Administrácia
+            </a>
+        </div>
+        <div>
+            Prihlásený je {{ request.user }}.
+        </div>
+        <a href="{% url 'logout' %}" class="logout_pic">
+            <img src="{% static 'images/power-button-symbol.svg' %}" alt="logout_box">
+        </a>
+    </div>  
+</div>

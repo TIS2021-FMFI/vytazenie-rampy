@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="50"
+   height="50"
+   viewBox="0 0 13.229167 13.229167"
+   version="1.1"
+   id="svg1993"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="arrow_left.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1995"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="10.248373"
+     inkscape:cx="26.101705"
+     inkscape:cy="34.981164"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1990" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       d="M 6.6145836,1.3833333e-7 C 2.9605591,1.3833333e-7 1.3333333e-7,2.9605595 1.3333333e-7,6.6145834 1.3333333e-7,10.268608 2.9605591,13.229167 6.6145836,13.229167 c 3.6540244,0 6.6145834,-2.960559 6.6145834,-6.6145836 C 13.229167,2.9605595 10.268608,1.3833333e-7 6.6145836,1.3833333e-7 Z M 7.3853962,3.8300573 5.3716826,5.7610889 h 4.8702534 c 0.354734,0 0.640121,0.2853872 0.640121,0.6401207 v 0.4267475 c 0,0.3547335 -0.285387,0.6401208 -0.640121,0.6401208 H 5.3716826 l 2.0137136,1.9310316 c 0.2587154,0.248047 0.2640497,0.6614585 0.010668,0.9148405 l -0.2933886,0.290721 c -0.250714,0.250714 -0.656124,0.250714 -0.904171,0 L 2.6591691,7.0680025 c -0.250714,-0.2507142 -0.250714,-0.6561241 0,-0.904171 L 6.1985046,2.6218288 c 0.250715,-0.2507138 0.656124,-0.2507138 0.904171,0 L 7.3960647,2.9125506 C 7.6494459,3.168599 7.6441116,3.5820105 7.3853967,3.8300573 Z"
+       id="path1209"
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.0266716"
+       inkscape:export-filename="C:\Users\Dell\Desktop\Skola\3.rocnik\TIS-ko\frontend\images\arrow_right.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

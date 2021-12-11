@@ -75,3 +75,112 @@ label {
 .notifyjs-corner {
     z-index: 9999 !important;
 }
+
+/*NAV PART*/
+
+.horna_navigacia {
+    background: #00538B;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100px;
+    color: white;
+}
+
+.kalendar_cast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 100%;
+    margin-left: 20px;
+}
+
+.prava_cast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 100%;
+}
+
+.text_cast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 2em;
+}
+
+.text_cast a:hover {
+    color: yellow;
+}
+
+.text_cast span:hover {
+    color: yellow;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_item {
+    display: none;
+    position: absolute;
+    background-color:#0099D4;
+    min-width: 100%;
+}
+
+.dropdown_item a {
+    display: block;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom:1px solid white;
+}
+
+.dropdown:hover .dropdown_item {
+    display: block;
+}
+
+.dropdown_item a:hover {
+    background-color: #A3D8E7;
+}
+
+.piktogram {
+    max-height: 1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.clicable_text_inside {
+    margin-left: 1em;
+    margin-right: 1em;
+    color: white;
+}
+
+.week-day_text {
+    background-color: white;
+    color:#00538B; 
+}
+
+a {
+    text-decoration: none;
+    color:#00538B;
+}
+
+a.logout_pic {
+    max-height: 100%;
+    margin-left: 0.5em;
+}
+
+#logout_img {
+    display: block;
+}
+
+.dnes_text {
+    background-color: white;
+    margin-left: 0.5em;
+}
+
+.dnes_text a:hover {
+    background-color: yellow;
+}
