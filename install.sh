@@ -2,8 +2,8 @@
 echo "*********************************"
 echo "1. Virtualne prostredie"
 
-if ! [ -x "$(command -v python3)" ]; then
-    echo 'Chyba: Python 3 nie je nainstalovany.'
+if ! [[ -x "$(command -v python3)" && -x "$(command -v python)" ]]; then
+    echo 'Chyba: Python nie je nainstalovany.'
     exit 1
 fi
 
@@ -12,8 +12,14 @@ if [ -d "$VENV" ]
 then
     echo "Virtualne prostredie je vytvorene."
 else
-    echo "Vytvaram virtualne prostredie."
-    python3 -m venv venv
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
+    then
+        echo "Vytvaram virtualne prostredie."
+        python -m venv venv
+    else
+        echo "Vytvaram virtualne prostredie."
+        python3 -m venv venv
+    fi
 fi
 
 echo "*********************************"
@@ -61,7 +67,7 @@ else
     read db
 
     touch src/main/.env
-    echo 'DEBUG=on\nSECRET_KEY="django-insecure-stb5=ncj-s6uaywj!8oul#9+6yx5y-*famah3n5ua)t_o^-#w"\nDATABASE_URL=postgresql://$user:$password@$hostname:$port/$db' > src/main/.env
+    printf "DEBUG=on\nSECRET_KEY=\"django-insecure-stb5=ncj-s6uaywj!8oul#9+6yx5y-*famah3n5ua)t_o^-#w\"\nDATABASE_URL=postgresql://$user:$password@$hostname:$port/$db" > src/main/.env
 fi
 
 echo "*********************************"
