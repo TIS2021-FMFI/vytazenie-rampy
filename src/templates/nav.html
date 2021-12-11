@@ -1,9 +1,9 @@
 <!-- Good luck! -->
-<!-- Prva verzia, treba este prelinkovat veci a zmenit pathy + pridat css -->
+<!-- ked tak fix piktogramy -->
 <div class="horna_navigacia">
-    <div class="kalendar_cast" style = "position:relative; left:20px;">
+    <div class="kalendar_cast">
         <img src="{% static 'images/calendar.svg' %}" alt="logo_calendar" class="piktogram">
-        <a href="test.html">
+        <a href="#">
             <img src="{% static 'images/arrow_left.svg' %}" alt="arrow_left" class="piktogram">
         </a>
         <div class="week-day_text">
@@ -11,7 +11,7 @@
             -
             31.11.2021
         </div>
-        <a href="test.html">
+        <a href="#">
             <img src="{% static 'images/arrow_right.svg' %}" alt="arrow_right" class="piktogram">
         </a>
         |
@@ -24,26 +24,26 @@
     <div class="prava_cast">
         <div class="text_cast">
             <!-- Treba este dorobit zobrazovanie iba pre specificke skupiny-->
-            <a href="{% url 'form/' %}" class="clicable_text_inside">
-                Pridaj Prepravu
+            <a href="{% url 'form-creation' %}" class="clicable_text_inside">
+                Pridaj prepravu
             </a>
             <div class="dropdown">
-                <span>Stranky</span>
+                <span>Stránky</span>
                 <div class="dropdown_item">
-                    <a href="{% url 'tyzden/' %}">Tyzdenny pohlad</a>
-                    <a href="{% url 'den/' %}">Denny pohlad</a>
-                    <a href="{% url 'tabulka/' %}">Tabulkovy pohlad</a>
+                    <a href="{% url 'week' %}">Týždenný pohľad</a>
+                    <a href="{% url 'day' %}">Denný pohľad</a>
+                    <a href="{% url 'table' %}">Tabuľkový pohľad</a>
                 </div>
             </div>
             <a href="{% url 'admin/' %}" class="clicable_text_inside">
-                Administracia
+                Administrácia
             </a>
         </div>
-        Prihlaseny je XXX
-        <div class="logout_cast">
-            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="logout_pic">
-                <img src="{% static 'images/power-button-symbol.svg' %}" alt="logout_box">
-            </a>
+        <div>
+            Prihlásený je {{ request.user }}.
         </div>
+        <a href="{% url 'logout' %}" class="logout_pic">
+            <img src="{% static 'images/power-button-symbol.svg' %}" alt="logout_box">
+        </a>
     </div>  
 </div>
