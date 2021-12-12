@@ -28,9 +28,7 @@ def form(request, pk=None):
         inst = None
 
     if request.method == "POST":
-        tracker = TransportChangeTracker(
-            request.POST, inst, request.user
-        )
+        tracker = TransportChangeTracker(request.POST, inst, request.user)
 
         if tracker.is_valid():
             tracker.track()
