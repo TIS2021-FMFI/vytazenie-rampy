@@ -21,6 +21,7 @@
 
 body {
     font-family: 'Exo', sans-serif;
+    overflow: hidden;
 }
 
 .hover-shadow-large {
@@ -127,6 +128,7 @@ label {
     position: absolute;
     background-color:#0099D4;
     min-width: 100%;
+    z-index: 9001;
 }
 
 .dropdown_item a {

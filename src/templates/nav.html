@@ -1,3 +1,4 @@
+{% load static %}
 <!-- Good luck! -->
 <!-- ked tak fix piktogramy -->
 <div class="horna_navigacia">
@@ -35,7 +36,7 @@
                     <a href="{% url 'table' %}">Tabuľkový pohľad</a>
                 </div>
             </div>
-            <a href="{% url 'admin/' %}" class="clicable_text_inside">
+            <a href="{% url 'admin:index' %}" class="clicable_text_inside">
                 Administrácia
             </a>
         </div>
