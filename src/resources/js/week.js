@@ -1,10 +1,6 @@
 import getCookie from './main';
 
 document.addEventListener('DOMContentLoaded', function () {
-    var modalEl = document.querySelector('#modal');
-    var modal = new bootstrap.Modal(modalEl);
-    modal.hide();
-
     // used for time where the calendar is initially scrolled at
     var date = new Date();
     date.setHours(date.getHours() - 1);
@@ -86,23 +82,34 @@ document.addEventListener('DOMContentLoaded', function () {
         eventClick: function (eventClickInfo) {
             var transportId = eventClickInfo.event.extendedProps.transport_id;
 
-            htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
             document.addEventListener('htmx:afterSettle', () => {
                 modal.show()
             }, { once: true });
+            htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
         },
         scrollTime: date.toTimeString(),
         editable: true,
         eventDurationEditable: true,
-        eventResizableFromStart: true
+        eventResizableFromStart: true,
+        datesSet: (dateInfo) => {
+            document.getElementById('week_day_text').innerHTML = dateInfo.start.toLocaleDateString("sk-SK") + ' - ' + dateInfo.end.toLocaleDateString("sk-SK");
+        }
     });
 
     document.addEventListener('transportSaved', function () {
-        modal.hide();
+        calendar.refetchEvents();
+    });
 
-        setTimeout(() => {
-            calendar.refetchEvents();
-        }, 300);
+    document.getElementById('calendar_prev').addEventListener('click', () => {
+        calendar.prev();
+    });
+
+    document.getElementById('calendar_next').addEventListener('click', () => {
+        calendar.next();
+    });
+
+    document.getElementById('calendar_today').addEventListener('click', () => {
+        calendar.today();
     });
 
     calendar.render();

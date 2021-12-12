@@ -1,3 +1,14 @@
+document.addEventListener('DOMContentLoaded', function () {
+    var modalEl = document.querySelector('#modal');
+    window.modal = new bootstrap.Modal(modalEl);
+
+    window.modal.hide();
+
+    document.addEventListener('transportSaved', function () {
+        window.modal.hide();
+    });
+}, { once: true });
+
 // used to inject csrf token into post requests
 export default function getCookie(name) {
     let cookieValue = null;

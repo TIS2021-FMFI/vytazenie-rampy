@@ -9,7 +9,7 @@ class TransportChangeTracker:
     save_instance = True
 
     def __init__(self, data, instance, user, partial=False):
-        if partial:
+        if partial and instance is not None:
             # enable partial instance update by injecting original instance data
             # to validated data dictionary
             instance_dict = model_to_dict(instance)
@@ -17,6 +17,7 @@ class TransportChangeTracker:
                 if field not in data:
                     data[field] = instance_dict[field]
 
+        self.instance = instance
         self.form = TransportForm(data, instance=instance)
         self.user = user
 
