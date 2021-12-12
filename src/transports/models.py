@@ -8,7 +8,7 @@ from dateutil import parser
 
 
 class Transport(models.Model):
-    LOAD_COLOR = "#00538B"
+    LOAD_COLOR = "#0099D4"
     UNLOAD_COLOR = "#EE9800"
     BOTH_COLOR = "#7B67A8"
 
@@ -64,6 +64,9 @@ class Transport(models.Model):
         )
 
     def _format_datetime(self, datetime):
+        """
+        Utility function to format datetime.
+        """
         return datetime.strftime("%d. %m. %Y %H:%M")
 
     @property
@@ -79,6 +82,11 @@ class Transport(models.Model):
         )
 
     def clean(self):
+        """
+        Custom Transport validation which takes in mind business logic.
+        """
+
+        # TODO: implementovat vsetky obmedzenia na tvorbu preprav (2 prepravy v rovnakom case na jednej brane atd.)
         if self.process_finish <= self.process_start:
             raise ValidationError(
                 {

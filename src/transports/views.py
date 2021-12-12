@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from .forms import TransportForm
 from .utils import TransportChangeTracker
@@ -47,13 +47,13 @@ def form(request, pk=None):
 
     # get instance if primary key is provided
     if form is None:
+        # TODO: initial values (predvyplneny formular s defaultnymi hodnotami napr. priorita, stav,...)
         form = TransportForm(instance=inst)
 
     context = {"form": form, "saved": saved}
 
-    if (
-        request.user.is_superuser
-    ):  # if user is administrator, include transport modifications in context
+    if request.user.is_superuser:
+        # if user is administrator, include transport modifications in context
         context["changes"] = (
             TransportModification.objects.filter(transport_id=pk)
             .order_by("created")

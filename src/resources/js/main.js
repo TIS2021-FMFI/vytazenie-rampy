@@ -1,3 +1,4 @@
+// initialize modal
 document.addEventListener('DOMContentLoaded', function () {
     var modalEl = document.querySelector('#modal');
     window.modal = new bootstrap.Modal(modalEl);

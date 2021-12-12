@@ -111,7 +111,6 @@
                         <label for="{{ form.process_start.id_for_label }}" class="form-label">Začiatok spracovania</label>
                         {% include 'transports/elements/field_change.html' %}
                     </div>
-                    {% comment %} <input type="text" class="form-control {% if form.process_start.errors %}is-invalid{% endif %}" id="{{ form.process_start.id_for_label }}" value="{% if form.process_start.value %}{{ form.process_start.value|date:'d.m.Y H:i:s' }}{% endif %}" name="{{ form.process_start.html_name }}"> {% endcomment %}
                     {{ form.process_start }}
                     <div class="invalid-feedback">
                         {{ form.process_start.errors.0 }}
@@ -122,7 +121,6 @@
                         <label for="{{ form.process_finish.id_for_label }}" class="form-label">Koniec spracovania</label>
                         {% include 'transports/elements/field_change.html' %}
                     </div>
-                    {% comment %} <input type="text" class="form-control {% if form.process_finish.errors %}is-invalid{% endif %}" id="{{ form.process_finish.id_for_label }}" value="{% if form.process_finish.value %}{{ form.process_finish.value|date:'d.m.Y H:i:s' }}{% endif %}" name="{{ form.process_finish.html_name }}"> {% endcomment %}
                     {{ form.process_finish }}
                     <div class="invalid-feedback">
                         {{ form.process_finish.errors.0 }}
@@ -169,7 +167,9 @@
                         <input class="form-check-input" type="checkbox" role="switch" id="{{ form.canceled.id_for_label }}" name="{{ form.canceled.html_name }}" {% if form.canceled.value %}checked="checked"{%endif%}>
                         <div class="d-flex justify-content-between">
                             <label class="form-check-label" for="{{ form.canceled.id_for_label }}">Zrušená</label>
-                            {% include 'transports/elements/field_change.html' %}
+                            {% if request.user.is_superuser %}
+                                {% include 'transports/elements/field_change.html' %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -192,15 +192,23 @@
     {% comment %} TODO: zobrazit zmeny na preprave - zmeny na preprave su dostupne cez premennu {{ changes }}{% endcomment %}
 
     <script>
+        // initialize datepickers
         $.datetimepicker.setLocale('sk');
         $('#{{ form.process_start.id_for_label }}').datetimepicker({
             lazyInit: false,
             format:'d.m.Y H:i:s',
         });
+
         $('#{{ form.process_finish.id_for_label }}').datetimepicker({
             lazyInit: false,
             format:'d.m.Y H:i:s',
         });
+
+        // TODO: pridat select input s vyhladavanim pri entitach (ak ich bude uz vela, nech je to prijemne na pouzivanie)
+
+        // TODO: pridat button na pridanie entit (dodavatel, ...)
+
+        // TODO: pri nastaveni zaciatku spracovania/konca spracovania, nastav druhy datetime field na dve hodine neskor/skor
 
         // make notifications
         {% for message in messages %}
