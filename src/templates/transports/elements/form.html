@@ -208,7 +208,7 @@
         {% endfor %}
 
         // send event to refetch events on calendar and close modal
-        {% if not form.errors and saved%}
+        {% if not form.errors and saved %}
             document.dispatchEvent(new Event('transportSaved', {"bubbles":true, "cancelable":false}));
         {% endif %}
 

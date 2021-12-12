@@ -15,6 +15,10 @@
     --secondary-gray-light: #DAE0E3;
 }
 
+#calendar {
+    height: calc(100vh - 100px);
+}
+
 .bg-primary, .btn-primary {
     background-color: var(--main-blue) !important;
 }
@@ -43,6 +47,10 @@ body {
 
 .fc-timegrid tr {
     height: 3em;
+}
+
+.fc-timegrid-event {
+    overflow: hidden;
 }
 
 tr:nth-child(odd) {
@@ -110,12 +118,12 @@ label {
     margin-right: 2em;
 }
 
-.text_cast a:hover {
-    color: yellow;
+.text_cast a {
+    transition: color 0.1s;
 }
 
-.text_cast span:hover {
-    color: yellow;
+.text_cast a:hover {
+    color: var(--main-yellow);
 }
 
 .dropdown {
@@ -126,25 +134,33 @@ label {
 .dropdown_item {
     display: none;
     position: absolute;
-    background-color:#0099D4;
-    min-width: 100%;
+    background-color: white;
+    min-width: 200px;
     z-index: 9001;
+    border-radius: 2px;
+    border: 1px solid var(--secondary-gray);
 }
 
 .dropdown_item a {
     display: block;
-    color: white;
+    color: var(--main-blue);
     padding: 10px;
     text-decoration: none;
     border-bottom:1px solid white;
+    transition: background-color 0.1s;
 }
 
 .dropdown:hover .dropdown_item {
     display: block;
 }
 
+.dropdown:hover .clickable_text_inside {
+    color: var(--main-yellow);
+}
+
 .dropdown_item a:hover {
-    background-color: #A3D8E7;
+    background-color: var(--main-yellow);
+    color: var(--main-blue);
 }
 
 .piktogram {
@@ -153,19 +169,30 @@ label {
     margin-right: 0.5em;
 }
 
-.clicable_text_inside {
+.clickable_text_inside {
     margin-left: 1em;
     margin-right: 1em;
     color: white;
 }
 
-.week-day_text {
+.horna_navigacia {
+    font-weight: bold;
+}
+
+.white-bg {
     background-color: white;
-    color:#00538B; 
+    color:#00538B;
+    transition: all 0.1s;
+    border-radius: 1px;
+}
+
+a.white-bg:hover {
+    box-shadow: 1px 1px 5px var(--secondary-gray);
+    background-color: var(--main-yellow);
+    color: white;
 }
 
 a {
-    text-decoration: none;
     color:#00538B;
 }
 
@@ -176,11 +203,6 @@ a.logout_pic {
 
 #logout_img {
     display: block;
-}
-
-.dnes_text {
-    background-color: white;
-    margin-left: 0.5em;
 }
 
 .dnes_text a:hover {

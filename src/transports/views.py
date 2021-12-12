@@ -22,9 +22,14 @@ def form(request, pk=None):
     form = None
     saved = True
 
+    try:
+        inst = Transport.objects.get(pk=pk)
+    except:
+        inst = None
+
     if request.method == "POST":
         tracker = TransportChangeTracker(
-            request.POST, get_object_or_404(Transport, pk=pk), request.user
+            request.POST, inst, request.user
         )
 
         if tracker.is_valid():
@@ -44,11 +49,6 @@ def form(request, pk=None):
 
     # get instance if primary key is provided
     if form is None:
-        try:
-            inst = Transport.objects.get(pk=pk)
-        except TypeError:
-            inst = None
-
         form = TransportForm(instance=inst)
 
     context = {"form": form, "saved": saved}
