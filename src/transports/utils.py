@@ -6,6 +6,10 @@ from modifications.models import TransportModification
 
 
 class TransportChangeTracker:
+    """
+    Handles all change tracking on transport model instances.
+    """
+
     save_instance = True
 
     def __init__(self, data, instance, user, partial=False):

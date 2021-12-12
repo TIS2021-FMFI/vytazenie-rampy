@@ -18,6 +18,7 @@ class TransportList(APIView):
         if not start or not end:
             return Response(status.HTTP_400_BAD_REQUEST)
 
+        # TODO: zobrazit iba nezrusene prepravy
         transports = Transport.find_objects_between_timestamps(start, end)
         serializer = TransportSerializer(transports, many=True)
         return Response(serializer.data)

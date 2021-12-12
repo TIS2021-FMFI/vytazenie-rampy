@@ -1,6 +1,6 @@
 {% load static %}
-<!-- Good luck! -->
-<!-- ked tak fix piktogramy -->
+{% comment %} TODO: Prosim pomenme slovenske nazvy class a idciek a podobne na anglicke ekvivalenty. Cela codebase je tvorena v anglictine, pokracujme v tom, nech to je jednotne. {% endcomment %}
+{% comment %} TODO: AJAX request loader - pri kazdom ajax requeste urobime loader, nech vedia ze sa nieco deje {% endcomment %}
 <div class="horna_navigacia">
     <div class="kalendar_cast">
         <img src="{% static 'images/calendar.svg' %}" alt="logo_calendar" class="piktogram">
@@ -20,7 +20,7 @@
     </div>
     <div class="prava_cast">
         <div class="text_cast">
-            <!-- Treba este dorobit zobrazovanie iba pre specificke skupiny-->
+            <!-- TODO: Treba este dorobit zobrazovanie iba pre specificke skupiny-->
             <a href="{% url 'form-creation' %}" class="clickable_text_inside" hx-get="{% url 'form-creation' %}" hx-target="#transport-detail" hx-swap="innerHTML">
                 Pridaj prepravu
             </a>
@@ -46,6 +46,7 @@
 </div>
 
 <script>
+    // when transport detail is put into modal, show it
     document.addEventListener('htmx:afterSettle', () => {
         window.modal.show()
     });

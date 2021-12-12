@@ -53,6 +53,10 @@ body {
     overflow: hidden;
 }
 
+.fc .fc-timegrid-col.fc-day-today {
+    background: var(--secondary-red-light) !important;
+}
+
 tr:nth-child(odd) {
     border-color: var(--secondary-gray-light);
     border-right-color: inherit;
@@ -66,6 +70,7 @@ tr:nth-child(odd) {
     display: inline-block;
     padding: 2px 5px !important;
     margin-bottom: 5px;
+    border-radius: 2px;
 }
 
 #id_canceled:checked {

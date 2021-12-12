@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     $.notify(data.msg, data.status ? 'success' : 'error');
                 })
         },
-        eventClick: function (eventClickInfo) {
+        eventClick: function (eventClickInfo) { // when user clicks on event, show modal with transport detail
             var transportId = eventClickInfo.event.extendedProps.transport_id;
 
             document.addEventListener('htmx:afterSettle', () => {
@@ -87,27 +87,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { once: true });
             htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
         },
-        scrollTime: date.toTimeString(),
+        scrollTime: date.toTimeString(), // scroll to current time
         editable: true,
         eventDurationEditable: true,
         eventResizableFromStart: true,
-        datesSet: (dateInfo) => {
+        datesSet: (dateInfo) => { // when date is set on the calendar, change text in the menu
             document.getElementById('week_day_text').innerHTML = dateInfo.start.toLocaleDateString("sk-SK") + ' - ' + dateInfo.end.toLocaleDateString("sk-SK");
         }
     });
 
+    // event sent from transport detail template (transports/elements/form.html) when transport is saved
     document.addEventListener('transportSaved', function () {
         calendar.refetchEvents();
     });
 
+    // go to previous week
+    // TODO: handle user permissions
     document.getElementById('calendar_prev').addEventListener('click', () => {
         calendar.prev();
     });
 
+    // go to next week
     document.getElementById('calendar_next').addEventListener('click', () => {
         calendar.next();
     });
 
+    // go to this day
     document.getElementById('calendar_today').addEventListener('click', () => {
         calendar.today();
     });
@@ -120,8 +125,8 @@ function getEventDescription(transport) {
     var carry = '<strong>' + transport.registration_number + '</strong><br>';
     carry += '<span class="event-ribbon" style="background-color: ' + transport.transport_priority.color + '; color: ' + transport.transport_priority.font_color + ';">' + transport.transport_priority.name + '</span><br>';
     carry += '<span class="event-ribbon" style="background-color: ' + transport.transport_status.color + '; color: ' + transport.transport_status.font_color + ';">' + transport.transport_status.name + '</span><br>';
-    carry += 'Dodávateľ: ' + transport.supplier + '<br>';
-    carry += 'Dopravca: ' + transport.carrier + '<br>';
+    carry += 'Dodávateľ: <strong>' + transport.supplier + '</strong><br>';
+    carry += 'Dopravca: <strong>' + transport.carrier + '</strong><br>';
 
     return carry;
 }

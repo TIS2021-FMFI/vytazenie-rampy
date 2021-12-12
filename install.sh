@@ -27,7 +27,7 @@ echo "2. Aktivacia virtualneho prostredia"
 
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
 then
-    ./venv/Scripts/activate
+    source ./venv/Scripts/activate
 else
     source ./venv/bin/activate
 fi
