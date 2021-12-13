@@ -39,9 +39,7 @@ class Transport(models.Model):
     class Meta:
         verbose_name_plural = "Prepravy"
         verbose_name = "Preprava"
-        indexes = [
-            models.Index(fields=['process_start'])
-        ]
+        indexes = [models.Index(fields=["process_start"])]
 
     @staticmethod
     def find_objects_between_timestamps(
@@ -54,9 +52,7 @@ class Transport(models.Model):
             start = parser.parse(start)
             end = parser.parse(end)
 
-        return Transport.objects.filter(
-            process_start__range=(start, end)
-        )
+        return Transport.objects.filter(process_start__range=(start, end))
 
     def __str__(self):
         start, end = self._format_datetime(self.process_start), self._format_datetime(
