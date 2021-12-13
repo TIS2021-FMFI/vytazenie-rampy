@@ -137,6 +137,7 @@ class TransportPriority(models.Model):
     class Meta:
         verbose_name_plural = "Priority prepráv"
         verbose_name = "Priorita prepráv"
+        ordering = ['sort']
 
     def __str__(self):
         return self.name
@@ -152,6 +153,7 @@ class TransportStatus(models.Model):
     class Meta:
         verbose_name_plural = "Stavy prepráv"
         verbose_name = "Stav prepráv"
+        ordering = ['sort']
 
     def __str__(self):
         return self.name

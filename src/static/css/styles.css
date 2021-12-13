@@ -99,6 +99,7 @@ label {
     justify-content: space-between;
     height: 100px;
     color: white;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
 }
 
 .kalendar_cast {
@@ -225,4 +226,29 @@ a.logout_pic {
     font-weight: normal;
     font-size: 12px;
     animation: fadeIn 0.5s infinite alternate;
+}
+
+.piktogram {
+    transition: filter 0.1s;
+}
+
+.piktogram:hover {
+    filter: brightness(90.1%) sepia(100%) saturate(1000%) hue-rotate(-25deg);
+}
+
+/* FORM SELECT */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: inherit !important;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 0.375rem .75rem !important;
+}
+
+.select2-container .select2-selection--single {
+    height: auto !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 0.375rem !important;
 }

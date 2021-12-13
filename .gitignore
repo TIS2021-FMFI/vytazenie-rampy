@@ -18,6 +18,7 @@ src/static/js/fullcalendar
 src/static/js/datetimepicker
 src/static/css/fullcalendar
 src/static/css/datetimepicker
+src/tmp
 
 *.dot
 *.psd

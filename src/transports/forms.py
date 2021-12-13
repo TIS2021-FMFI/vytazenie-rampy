@@ -27,6 +27,12 @@ class TransportForm(forms.ModelForm):
             except KeyError:
                 self.fields[field].widget.attrs = {"class": "form-control"}
 
+            if self.fields[field].required:
+                try:
+                    self.fields[field].empty_label = None
+                except AttributeError:
+                    pass
+
     def is_valid(self):
         is_valid = super(TransportForm, self).is_valid()
 
