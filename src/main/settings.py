@@ -35,9 +35,11 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_htmx",
     "rest_framework",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -133,3 +135,7 @@ GRAPH_MODELS = {
 }
 
 LOGIN_URL = "/login/"
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

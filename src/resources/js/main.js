@@ -1,3 +1,11 @@
+export function showLoader() {
+    document.querySelector('#loader').classList.remove('d-none');
+}
+
+export function hideLoader() {
+    document.querySelector('#loader').classList.add('d-none');
+}
+
 // initialize modal
 document.addEventListener('DOMContentLoaded', function () {
     var modalEl = document.querySelector('#modal');
@@ -10,8 +18,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 }, { once: true });
 
+document.addEventListener('htmx:afterRequest', function () {
+    hideLoader();
+});
+
+document.addEventListener('htmx:beforeSend', function () {
+    showLoader();
+});
+
 // used to inject csrf token into post requests
-export default function getCookie(name) {
+export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');

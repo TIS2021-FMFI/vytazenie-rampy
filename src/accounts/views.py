@@ -14,6 +14,12 @@ class CustomLoginView(LoginView):
         )
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["exclude_header"] = True
+
+        return context
+
 
 def logout_view(request):
     if request.user.is_authenticated:

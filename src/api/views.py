@@ -1,7 +1,9 @@
 from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from transports.models import Transport
 from transports.utils import TransportChangeTracker
@@ -12,14 +14,21 @@ class TransportList(APIView):
     """
     List all transports scheduled in between requested timestamps. Used by fullcalendar.io library.
     """
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
         start, end = request.GET.get("start", False), request.GET.get("end", False)
         if not start or not end:
             return Response(status.HTTP_400_BAD_REQUEST)
 
-        # TODO: zobrazit iba nezrusene prepravy
-        transports = Transport.find_objects_between_timestamps(start, end)
+        transports = (
+            Transport.find_objects_between_timestamps(start, end)
+            .select_related(
+                "transport_priority", "transport_status", "supplier", "carrier", "gate"
+            )
+            .filter(canceled=False)
+        )
         serializer = TransportSerializer(transports, many=True)
         return Response(serializer.data)
 
@@ -28,6 +37,8 @@ class TransportUpdate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         try:

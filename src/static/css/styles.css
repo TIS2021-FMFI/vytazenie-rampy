@@ -213,3 +213,16 @@ a.logout_pic {
 .dnes_text a:hover {
     background-color: yellow;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+}
+
+#loader {
+    position: absolute;
+    top: 10px;
+    left: calc(20px + 0.5em);
+    font-weight: normal;
+    font-size: 12px;
+    animation: fadeIn 0.5s infinite alternate;
+}

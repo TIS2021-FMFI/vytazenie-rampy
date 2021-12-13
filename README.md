@@ -7,17 +7,9 @@ Na spustenie projektu na lokálnom počítači je potrebný Python 3.7 a vyšši
 ## Inštalácia projektu
 0. Najjednoduchšia inštalácia projektu je prostredníctvom priloženého skriptu `install.sh`. Spustením skriptu sa vám nainicializuje celý projekt, prebehne inštalácia knižníc na beh backendu, frontendu, prebehne konfigurácia databázového spojenia a spustia sa databázové migrácie.
 
-1. Najprv je potrebné vytvoriť si virtuálne prostredie pre inštaláciu potrebných knižníc. `python -m venv venv` _(Pre niektoré operačné systémy je potrebné použiť namiesto `python` príkaz `python3`)_
+1. Pre import základnej konfigurácie, bez ktorej nie je možné správne fungovanie aplikácie napíšte z koreňového adresára do príkazového riadka `python src/manage.py loaddata import/*`.
 
-2. Keď je virtuálne prostredie vytvorené, je potrebné ho aktivovať.
-    - MacOS/Linux - `source venv/bin/activate`
-    - Windows - `venv/Scripts/activate`
-
-3. Teraz je možné si nainštalovať potrebné knižnice. `pip install -r requirements.txt`
-
-4. V priečinku `src/main/` sa nachádza súbor `.env.default`, ktorý obsahuje základnú konfiguráciu pre Django. Duplikujte tento súbor a odstráňte z jeho názvu `.default`. Tak zabezpečíte, že Django načíta správne konfiguračné údaje. Do budúcna tu pribudne viacero vecí ako konfigurácia Postgres databázy, či cacheovacieho enginu. Tento mechanizmus zabezpečuje, že žiadne citlivé údaje sa nedostanú na verejný repozitár.
-
-5. V root priečinku je potrebné nainštalovať si potrebné javascriptové balíčky cez `npm`, odporúčam minimálne Node.js verziu `14`. Príkazom `npm i` sa nainštalujú potrebné balíčky. Následne ich treba vybuildiť cez príkaz `npm run build`.
+2. Na vytvorenie administrátorského účtu spustite `python src/manage.py createsuperuser`.
 
 ## Spustenie vývojárskeho serveru
 Django prichádza defaultne s vlastným serverom určeným na vývoj na lokálnom počítači. Tento server je možné zapnúť príkazom `python manage.py runserver`. Je potrebné byť v priečinku `./src`, kde sa nachádza súbor `manage.py`.
