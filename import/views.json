@@ -1,0 +1,1 @@
+[{"model": "accounts.view", "pk": 1, "fields": {"name": "Týždňový pohľad", "view": "week"}}, {"model": "accounts.view", "pk": 2, "fields": {"name": "Denný pohľad", "view": "day"}}, {"model": "accounts.view", "pk": 3, "fields": {"name": "Tabuľkový pohľad", "view": "table"}}]
