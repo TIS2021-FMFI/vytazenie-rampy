@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.utils.translation import gettext_lazy as _
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
@@ -59,3 +59,4 @@ admin.site.unregister(Group)
 admin.site.register(Group, NewGroupAdmin)
 
 admin.site.register(View)
+admin.site.register(Permission)

@@ -1,15 +1,21 @@
 {% load static %}
 {% comment %} TODO: Prosim pomenme slovenske nazvy class a idciek a podobne na anglicke ekvivalenty. Cela codebase je tvorena v anglictine, pokracujme v tom, nech to je jednotne. {% endcomment %}
-{% comment %} TODO: AJAX request loader - pri kazdom ajax requeste urobime loader, nech vedia ze sa nieco deje {% endcomment %}
 <div class="horna_navigacia">
+    <div id="loader" class="d-none">
+        Načítavanie...
+    </div>
     <div class="kalendar_cast">
         <img src="{% static 'images/calendar.svg' %}" alt="logo_calendar" class="piktogram">
+        {% if perms.transports.calendar_move_range %}
         <a href="#" id="calendar_prev">
             <img src="{% static 'images/arrow_left.svg' %}" alt="arrow_left" class="piktogram">
         </a>
+        {% endif %}
+
         <div id="week_day_text" class="px-2 white-bg">
             ...
         </div>
+        {% if perms.transports.calendar_move_range %}
         <a href="#" id="calendar_next">
             <img src="{% static 'images/arrow_right.svg' %}" alt="arrow_right" class="piktogram">
         </a>
@@ -17,6 +23,7 @@
         <a href="#" id="calendar_today" class="white-bg px-2 ms-3">
             dnes
         </a>
+        {% endif %}
     </div>
     <div class="prava_cast">
         <div class="text_cast">

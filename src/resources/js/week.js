@@ -1,4 +1,4 @@
-import getCookie from './main';
+import { getCookie, showLoader, hideLoader } from './main';
 
 document.addEventListener('DOMContentLoaded', function () {
     // used for time where the calendar is initially scrolled at
@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
             center: null,
             end: null
         },
+        validRange: function(nowDate) {
+            if (perms.calendar_history) return {};
+
+            return {
+                start: nowDate
+            };
+        },
         locale: 'sk',
         firstDay: 1, // first day is monday
         allDaySlot: false, // don't support full-day events
@@ -24,8 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
             meridiem: 'long'
         },
         themeSystem: 'bootstrap',
-        events: transports_list_url, // url to fetch transports from
+        events: transports_list_url, // url to fetch transports from,
+        loading: function (isLoading) {
+            if (isLoading) showLoader();
+            else hideLoader();
+        },
         eventSourceSuccess: function (content, xhr) {
+            hideLoader();
             // gets called on successful fetch from api
             var eventArray = [];
 
@@ -63,6 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 process_finish: event.end.toISOString(),
             }
 
+            showLoader();
+
             // update transport on api
             fetch(base_host + '/api/transports/' + event.extendedProps.transport_id + '/', {
                 method: 'POST',
@@ -77,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }).then((res) => res.json())
                 .then((data) => {
                     $.notify(data.msg, data.status ? 'success' : 'error');
+                    hideLoader();
                 })
         },
         eventClick: function (eventClickInfo) { // when user clicks on event, show modal with transport detail
@@ -88,9 +103,9 @@ document.addEventListener('DOMContentLoaded', function () {
             htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
         },
         scrollTime: date.toTimeString(), // scroll to current time
-        editable: true,
-        eventDurationEditable: true,
-        eventResizableFromStart: true,
+        editable: perms.calendar_editable,
+        eventDurationEditable: perms.calendar_editable,
+        eventResizableFromStart: perms.calendar_editable,
         datesSet: (dateInfo) => { // when date is set on the calendar, change text in the menu
             document.getElementById('week_day_text').innerHTML = dateInfo.start.toLocaleDateString("sk-SK") + ' - ' + dateInfo.end.toLocaleDateString("sk-SK");
         }
@@ -102,20 +117,32 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // go to previous week
-    // TODO: handle user permissions
-    document.getElementById('calendar_prev').addEventListener('click', () => {
-        calendar.prev();
-    });
+    try {
+        document.getElementById('calendar_prev').addEventListener('click', () => {
+            var originalActiveStart = calendar.view.activeStart.getTime();
+            var originalActiveEnd = calendar.view.activeEnd.getTime();
 
-    // go to next week
-    document.getElementById('calendar_next').addEventListener('click', () => {
-        calendar.next();
-    });
+            calendar.prev();
 
-    // go to this day
-    document.getElementById('calendar_today').addEventListener('click', () => {
-        calendar.today();
-    });
+            var currentActiveStart = calendar.view.currentStart.getTime();
+            var currentActiveEnd = calendar.view.currentEnd.getTime();
+
+            if (currentActiveStart === originalActiveStart && currentActiveEnd === originalActiveEnd) {
+                $.notify("Časový rozsah nemôžete posunúť do minulosti.", "error");
+            }
+        });
+
+        // go to next week
+        document.getElementById('calendar_next').addEventListener('click', () => {
+            calendar.next();
+        });
+
+        // go to this day
+        document.getElementById('calendar_today').addEventListener('click', () => {
+            calendar.today();
+        });
+    } catch (error) {
+    }
 
     calendar.render();
 });

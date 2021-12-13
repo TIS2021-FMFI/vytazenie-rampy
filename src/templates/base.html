@@ -27,7 +27,9 @@
 </head>
 
 <body>
-    {% include 'nav.html' %}
+    {% if not exclude_header %}
+        {% include 'nav.html' %}
+    {% endif %}
 
     <main>
         {% block content %}

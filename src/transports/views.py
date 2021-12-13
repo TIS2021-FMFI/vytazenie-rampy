@@ -70,6 +70,7 @@ def form(request, pk=None):
     "",
 )
 def week(request):
+    print(request.user.user_permissions.all())
     return render(request, "transports/week.html")
 
 

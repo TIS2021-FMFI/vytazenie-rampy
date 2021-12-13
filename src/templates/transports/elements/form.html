@@ -192,38 +192,55 @@
     {% comment %} TODO: zobrazit zmeny na preprave - zmeny na preprave su dostupne cez premennu {{ changes }}{% endcomment %}
 
     <script>
-        // initialize datepickers
-        $.datetimepicker.setLocale('sk');
-        $('#{{ form.process_start.id_for_label }}').datetimepicker({
-            lazyInit: false,
-            format:'d.m.Y H:i:s',
+        function prefixZero(num) {
+            if (num < 10) return '0' + num;
+            return num;
+        }
+
+        function formatDate(date) {
+            return prefixZero(date.getDate()) + '.' + prefixZero(date.getMonth() + 1) + '.' + date.getFullYear() + ' ' + prefixZero(date.getHours()) + ':' + prefixZero(date.getMinutes()) + ':00';
+        }
+
+        $(function () {
+            // initialize datepickers
+            $.datetimepicker.setLocale('sk');
+            $('#{{ form.process_start.id_for_label }}').datetimepicker({
+                lazyInit: false,
+                format:'d.m.Y H:i:s',
+                onChangeDateTime: function (dp, input) {
+                    input.val(formatDate(dp));
+
+                    var finish = new Date(dp.getTime());
+                    finish.setHours(finish.getHours() + 2);
+
+                    $('#{{ form.process_finish.id_for_label }}').val(formatDate(finish));
+                }
+            });
+
+            $('#{{ form.process_finish.id_for_label }}').datetimepicker({
+                lazyInit: false,
+                format:'d.m.Y H:i:s',
+            });
+
+            // TODO: pridat select input s vyhladavanim pri entitach (ak ich bude uz vela, nech je to prijemne na pouzivanie)
+
+            // TODO: pridat button na pridanie entit (dodavatel, ...)
+
+            // make notifications
+            {% for message in messages %}
+                $.notify("{{ message }}", "{{ message.tags }}");
+            {% endfor %}
+
+            // send event to refetch events on calendar and close modal
+            {% if not form.errors and saved %}
+                document.dispatchEvent(new Event('transportSaved', {"bubbles":true, "cancelable":false}));
+            {% endif %}
+
+            // display tooltips
+            {% if request.user.is_superuser %}
+                tippy('[data-tippy-content]');
+            {% endif %}
         });
-
-        $('#{{ form.process_finish.id_for_label }}').datetimepicker({
-            lazyInit: false,
-            format:'d.m.Y H:i:s',
-        });
-
-        // TODO: pridat select input s vyhladavanim pri entitach (ak ich bude uz vela, nech je to prijemne na pouzivanie)
-
-        // TODO: pridat button na pridanie entit (dodavatel, ...)
-
-        // TODO: pri nastaveni zaciatku spracovania/konca spracovania, nastav druhy datetime field na dve hodine neskor/skor
-
-        // make notifications
-        {% for message in messages %}
-            $.notify("{{ message }}", "{{ message.tags }}");
-        {% endfor %}
-
-        // send event to refetch events on calendar and close modal
-        {% if not form.errors and saved %}
-            document.dispatchEvent(new Event('transportSaved', {"bubbles":true, "cancelable":false}));
-        {% endif %}
-
-        // display tooltips
-        {% if request.user.is_superuser %}
-            tippy('[data-tippy-content]');
-        {% endif %}
     </script>
 </div>
 {% endblock %}
