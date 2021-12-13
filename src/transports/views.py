@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.cache import cache
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
 from .forms import TransportForm
 from .utils import TransportChangeTracker
-from .models import Transport
+from .models import Transport, TransportPriority, TransportStatus
 from modifications.models import TransportModification
 
 
@@ -47,8 +47,7 @@ def form(request, pk=None):
 
     # get instance if primary key is provided
     if form is None:
-        # TODO: initial values (predvyplneny formular s defaultnymi hodnotami napr. priorita, stav,...)
-        form = TransportForm(instance=inst)
+        form = TransportForm(instance=inst, initial=_get_default_transport_data())
 
     context = {"form": form, "saved": saved}
 
@@ -97,7 +96,31 @@ def detail(request):
 def table(request):
     return render(request, "transports/table.html")
 
+def _get_default_transport_data():
+    transport_priority = cache.get('default_transport_priority')
+    if transport_priority is None:
+        transport_priority = TransportPriority.objects.filter(is_default=True).first()
 
-class TransportListView(ListView):
-    template_name = "transports/index.html"
-    queryset = Transport.objects.all()
+        if transport_priority is None:
+            raise RuntimeError("No default transport priority!")
+
+        transport_priority = transport_priority.pk
+
+        cache.set('default_transport_priority_id', transport_priority, 600)
+
+    transport_status = cache.get('default_transport_status')
+    if transport_status is None:
+        transport_status = TransportStatus.objects.filter(is_default=True).first()
+
+        if transport_status is None:
+            raise RuntimeError("No default transport status!")
+
+        transport_status = transport_status.pk
+        cache.set('default_transport_status_id', transport_status, 600)
+
+    return {
+        "transport_priority": transport_priority,
+        "transport_status": transport_status
+    }
+
+
