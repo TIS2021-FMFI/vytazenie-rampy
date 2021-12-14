@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from transports.views import form, week, day, detail, table, view_based_on_user_group
+from transports.views import form, week, day, table, view_based_on_user_group
 
 
 urlpatterns = [
@@ -28,7 +28,6 @@ urlpatterns = [
     path("form/<int:pk>", form, name="form"),
     path("tyzden/", week, name="week"),
     path("den/", day, name="day"),
-    path("detail/", detail, name="detail"),
     path("tabulka/", table, name="table"),
     path("api/", include("api.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
