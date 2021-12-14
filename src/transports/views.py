@@ -19,18 +19,19 @@ def form(request, pk=None):
     Create new Transport and update existing one. Track changes made on Transports
     along with user who submitted them.
     """
-    form = None
-    saved = True
+    _form = None
+    saved = False
 
     try:
         inst = Transport.objects.get(pk=pk)
-    except:
+    except Transport.DoesNotExist:
         inst = None
 
     if request.method == "POST":
         tracker = TransportChangeTracker(request.POST, inst, request.user)
 
         if tracker.is_valid():
+            saved = True
             tracker.track()
             messages.add_message(
                 request, messages.SUCCESS, "Preprava bola úspešne upravená."
@@ -41,15 +42,14 @@ def form(request, pk=None):
                 messages.ERROR,
                 "Prepravu sa nepodarilo upraviť. Skontrolujte prosím vyplnené údaje.",
             )
-            saved = False
 
-        form = tracker.get_form()
+        _form = tracker.get_form()
 
     # get instance if primary key is provided
-    if form is None:
-        form = TransportForm(instance=inst, initial=_get_default_transport_data())
+    if _form is None:
+        _form = TransportForm(instance=inst, initial=_get_default_transport_data())
 
-    context = {"form": form, "saved": saved}
+    context = {"form": _form, "saved": saved}
 
     if request.user.is_superuser:
         # if user is administrator, include transport modifications in context
@@ -69,7 +69,7 @@ def form(request, pk=None):
     "",
 )
 def week(request):
-    return render(request, "transports/week.html")
+    return render(request, "transports/week.html", {"title_appendix": "Týždenný pohľad", "calendar_controls": True})
 
 
 @user_passes_test(
@@ -79,12 +79,7 @@ def week(request):
     "",
 )
 def day(request):
-    return render(request, "transports/day.html")
-
-
-@login_required
-def detail(request):
-    return render(request, "transports/detail.html")
+    return render(request, "transports/day.html", {"title_appendix": "Denný pohľad"})
 
 
 @user_passes_test(
@@ -94,10 +89,11 @@ def detail(request):
     "",
 )
 def table(request):
-    return render(request, "transports/table.html")
+    return render(request, "transports/table.html", {"title_appendix": "Tabuľkový pohľad"})
+
 
 def _get_default_transport_data():
-    transport_priority = cache.get('default_transport_priority')
+    transport_priority = cache.get('default_transport_priority_id')
     if transport_priority is None:
         transport_priority = TransportPriority.objects.filter(is_default=True).first()
 
@@ -108,7 +104,7 @@ def _get_default_transport_data():
 
         cache.set('default_transport_priority_id', transport_priority, 600)
 
-    transport_status = cache.get('default_transport_status')
+    transport_status = cache.get('default_transport_status_id')
     if transport_status is None:
         transport_status = TransportStatus.objects.filter(is_default=True).first()
 

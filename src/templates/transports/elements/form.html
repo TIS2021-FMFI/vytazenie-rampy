@@ -224,15 +224,69 @@
 
             $('select.form-select').select2({
                 dropdownParent: $('#modal'),
-                width: "100%"
+                width: "100%",
+                tags: true,
+                createTag: function (params) {
+                    var inputId = this.$element.attr('id');
+                    var validInputIds = ['id_supplier', 'id_carrier'];
+
+                    if (!validInputIds.includes(inputId)) {
+                        return;
+                    }
+
+                    var term = $.trim(params.term);
+
+                    if (term === '') {
+                        return null;
+                    }
+
+                    return {
+                        id: term,
+                        text: '+ ' + term,
+                        newTag: true
+                    }
+                }
+            });
+
+            $('select.form-select').on('select2:select', function (e) {
+                var data = e.params.data;
+                if (!data.newTag) {
+                    return;
+                }
+
+                var updateEndpoints = {
+                    id_supplier: '/api/suppliers/create/',
+                    id_carrier: '/api/carriers/create/'
+                };
+
+                var fixedName = data.text.substring(2);
+                fetch(updateEndpoints[e.target.id], {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': window.csrftoken
+                    },
+                    body: JSON.stringify({name: fixedName})
+                }).then(res => res.json())
+                .then((res) => {
+                    var optionEl = $('span.select2-selection__rendered[title="' + data.text + '"]');
+                    optionEl.html(fixedName);
+                    optionEl.attr('title', fixedName);
+                    $('[value="' + data.id + '"]').html(fixedName);
+
+                    if (res.id) {
+                        $('[value="' + data.id + '"]').val(res.id);
+                    }
+
+                    $.notify(res.msg, res.id ? 'success' : 'error');
+                });
             });
 
             $(document).on('select2:open', () => {
                 document.querySelector('.select2-search__field').focus();
             });
-
-
-            // TODO: pridat button na pridanie entit (dodavatel, ...)
 
             // make notifications
             {% for message in messages %}
