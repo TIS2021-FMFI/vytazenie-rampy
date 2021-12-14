@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('transportSaved', function () {
         window.modal.hide();
     });
+
+    var dateEl = document.querySelector('#week_day_text');
+    console.log(dateEl);
+    var now = new Date();
+    if (dateEl.innerText === "...") {
+        dateEl.innerHTML = now.toLocaleDateString('sk');
+    }
 }, { once: true });
 
 document.addEventListener('htmx:afterRequest', function () {
@@ -42,3 +49,5 @@ export function getCookie(name) {
     }
     return cookieValue;
 }
+
+window.csrftoken = getCookie('csrftoken');

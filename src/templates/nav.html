@@ -6,7 +6,7 @@
     </div>
     <div class="kalendar_cast">
         <img src="{% static 'images/calendar.svg' %}" alt="logo_calendar" class="piktogram">
-        {% if perms.transports.calendar_move_range %}
+        {% if perms.transports.calendar_move_range and calendar_controls %}
         <a href="#" id="calendar_prev">
             <img src="{% static 'images/arrow_left.svg' %}" alt="arrow_left" class="piktogram">
         </a>
@@ -15,7 +15,7 @@
         <div id="week_day_text" class="px-2 white-bg">
             ...
         </div>
-        {% if perms.transports.calendar_move_range %}
+        {% if perms.transports.calendar_move_range and calendar_controls %}
         <a href="#" id="calendar_next">
             <img src="{% static 'images/arrow_right.svg' %}" alt="arrow_right" class="piktogram">
         </a>

@@ -95,11 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
         },
         eventClick: function (eventClickInfo) { // when user clicks on event, show modal with transport detail
+            if (!perms.calendar_editable) return;
+
+            document.querySelector('#transport-detail').innerHTML = '';
             var transportId = eventClickInfo.event.extendedProps.transport_id;
 
-            document.addEventListener('htmx:afterSettle', () => {
-                modal.show()
-            }, { once: true });
+            modal.show();
             htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
         },
         scrollTime: date.toTimeString(), // scroll to current time
