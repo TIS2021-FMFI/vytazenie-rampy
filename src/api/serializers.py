@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from transports.models import Transport, TransportPriority, TransportStatus
+from transports.models import Carrier, Supplier, Transport, TransportPriority, TransportStatus
 
 
 class TransportPrioritySerializer(serializers.ModelSerializer):
@@ -14,6 +14,21 @@ class TransportStatusSerializer(serializers.ModelSerializer):
         model = TransportStatus
         fields = "__all__"
 
+class CarrierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Carrier
+        fields = "__all__"
+
+    def create(self, validated_data):
+        return Carrier.objects.create(**validated_data)
+
+class SupplierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Supplier
+        fields = "__all__"
+
+    def create(self, validated_data):
+        return Supplier.objects.create(**validated_data)
 
 class TransportSerializer(serializers.ModelSerializer):
     supplier = serializers.StringRelatedField()
