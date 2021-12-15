@@ -4,17 +4,17 @@ from .models import Transport
 from .forms import DefaultBootstrapForm
 
 filter_fields = {
-    'process_start': ['lt', 'gt'],
-    'transport_status': ['exact'],
-    'transport_priority': ['exact'],
-    'gate': ['exact'],
-    'load': ['exact'],
-    'unload': ['exact'],
-    'supplier': ['exact'],
-    'carrier': ['exact'],
-    'canceled': ['exact'],
-    'driver_name': ['icontains'],
-    'registration_number': ['icontains'],
+    "process_start": ["lt", "gt"],
+    "transport_status": ["exact"],
+    "transport_priority": ["exact"],
+    "gate": ["exact"],
+    "load": ["exact"],
+    "unload": ["exact"],
+    "supplier": ["exact"],
+    "carrier": ["exact"],
+    "canceled": ["exact"],
+    "driver_name": ["icontains"],
+    "registration_number": ["icontains"],
 }
 
 
@@ -25,9 +25,9 @@ class TransportFilterForm(DefaultBootstrapForm):
 
 
 boolean_choices = [
-    (None, 'Všetko'),
-    (True, 'Áno'),
-    (False, 'Nie'),
+    (None, "Všetko"),
+    (True, "Áno"),
+    (False, "Nie"),
 ]
 
 
@@ -40,4 +40,3 @@ class TransportFilter(FilterSet):
         model = Transport
         fields = filter_fields
         form = TransportFilterForm
-

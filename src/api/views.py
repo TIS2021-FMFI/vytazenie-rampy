@@ -14,6 +14,7 @@ class TransportList(APIView):
     """
     List all transports scheduled in between requested timestamps. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -37,6 +38,7 @@ class TransportUpdate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -65,10 +67,12 @@ class TransportUpdate(APIView):
 
         return Response({"status": False, "msg": "Prepravu sa nepodarilo upraviť."})
 
+
 class CarrierCreate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -77,14 +81,22 @@ class CarrierCreate(APIView):
 
         if serializer.is_valid():
             carrier = serializer.save()
-            return Response({"status": True, "msg": "Prepravca bol úspešne vytvorený.", "id": carrier.pk})
+            return Response(
+                {
+                    "status": True,
+                    "msg": "Prepravca bol úspešne vytvorený.",
+                    "id": carrier.pk,
+                }
+            )
 
         return Response({"status": False, "msg": "Prepravcu sa nepodarilo vytvoriť."})
+
 
 class SupplierCreate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -93,6 +105,12 @@ class SupplierCreate(APIView):
 
         if serializer.is_valid():
             supplier = serializer.save()
-            return Response({"status": True, "msg": "Dodávateľ bol úspešne vytvorený.", "id": supplier.pk})
+            return Response(
+                {
+                    "status": True,
+                    "msg": "Dodávateľ bol úspešne vytvorený.",
+                    "id": supplier.pk,
+                }
+            )
 
         return Response({"status": False, "msg": "Dodávateľa sa nepodarilo vytvoriť."})

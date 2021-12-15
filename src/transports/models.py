@@ -24,9 +24,15 @@ class Transport(models.Model):
     process_finish = models.DateTimeField("Koniec spracovania")
     load = models.BooleanField("Nakládka")
     unload = models.BooleanField("Vykládka")
-    transport_priority = models.ForeignKey("TransportPriority", models.CASCADE, verbose_name="Priorita")
-    transport_status = models.ForeignKey("TransportStatus", models.CASCADE, verbose_name="Stav")
-    gate = models.ForeignKey("Gate", models.CASCADE, null=True, blank=True, verbose_name="Brána")
+    transport_priority = models.ForeignKey(
+        "TransportPriority", models.CASCADE, verbose_name="Priorita"
+    )
+    transport_status = models.ForeignKey(
+        "TransportStatus", models.CASCADE, verbose_name="Stav"
+    )
+    gate = models.ForeignKey(
+        "Gate", models.CASCADE, null=True, blank=True, verbose_name="Brána"
+    )
     canceled = models.BooleanField("Zrušená", default=False)
     note = models.CharField(
         "Poznámka", blank=True, null=False, default="", max_length=100
@@ -86,7 +92,11 @@ class Transport(models.Model):
         """
 
         # TODO: implementovat vsetky obmedzenia na tvorbu preprav (2 prepravy v rovnakom case na jednej brane atd.)
-        if self.process_finish and self.process_start and self.process_finish <= self.process_start:
+        if (
+            self.process_finish
+            and self.process_start
+            and self.process_finish <= self.process_start
+        ):
             raise ValidationError(
                 {
                     "process_finish": "Spracovanie prepravy musí skončiť neskôr ako jej začiatok."
@@ -137,7 +147,7 @@ class TransportPriority(models.Model):
     class Meta:
         verbose_name_plural = "Priority prepráv"
         verbose_name = "Priorita prepráv"
-        ordering = ['sort']
+        ordering = ["sort"]
 
     def __str__(self):
         return self.name
@@ -153,7 +163,7 @@ class TransportStatus(models.Model):
     class Meta:
         verbose_name_plural = "Stavy prepráv"
         verbose_name = "Stav prepráv"
-        ordering = ['sort']
+        ordering = ["sort"]
 
     def __str__(self):
         return self.name

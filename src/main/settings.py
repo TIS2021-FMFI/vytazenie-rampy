@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "rest_framework",
     "debug_toolbar",
-    "django_filters"
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -81,9 +81,9 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': BASE_DIR / 'tmp',
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": BASE_DIR / "tmp",
     }
 }
 
@@ -148,4 +148,4 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-FILTERS_EMPTY_CHOICE_LABEL = 'Všetko'
+FILTERS_EMPTY_CHOICE_LABEL = "Všetko"
