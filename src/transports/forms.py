@@ -1,10 +1,26 @@
 from django import forms
 from .models import Transport
 
-default_attrs = {forms.Select: {"class": "form-select", "autocomplete": False}}
+default_attrs = {
+    forms.Select: {"class": "form-select", "autocomplete": False},
+    forms.NullBooleanSelect: {"class": "form-select", "autocomplete": False},
+}
 
 
-class TransportForm(forms.ModelForm):
+class DefaultBootstrapForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DefaultBootstrapForm, self).__init__(*args, **kwargs)
+
+        for field in self.fields:
+            try:
+                self.fields[field].widget.attrs = default_attrs[
+                    self.fields[field].widget.__class__
+                ]
+            except KeyError:
+                self.fields[field].widget.attrs = {"class": "form-control"}
+
+
+class TransportForm(DefaultBootstrapForm):
     process_start = forms.DateTimeField(
         widget=forms.widgets.DateTimeInput(format="%d.%m.%Y %H:%M:%S")
     )
@@ -20,13 +36,6 @@ class TransportForm(forms.ModelForm):
         super(TransportForm, self).__init__(*args, **kwargs)
 
         for field in self.fields:
-            try:
-                self.fields[field].widget.attrs = default_attrs[
-                    self.fields[field].widget.__class__
-                ]
-            except KeyError:
-                self.fields[field].widget.attrs = {"class": "form-control"}
-
             if self.fields[field].required:
                 try:
                     self.fields[field].empty_label = None

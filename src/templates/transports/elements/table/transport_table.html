@@ -1,0 +1,98 @@
+<div class="container">
+    <div class="table-responsive shadow-sm my-4 p-2 border">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">EČV</th>
+                <th scope="col">Šofér</th>
+                <th scope="col">Začiatok</th>
+                <th scope="col">Koniec</th>
+                <th scope="col">Priorita</th>
+                <th scope="col">Stav</th>
+                <th scope="col">Dodávateľ</th>
+                <th scope="col">Prepravca</th>
+                <th scope="col">Brána</th>
+                <th scope="col">Nakládka</th>
+                <th scope="col">Vykládka</th>
+                <th scope="col">Zrušená</th>
+                <th scope="col">Detail</th>
+            </tr>
+            </thead>
+            {% for obj in object_list %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ obj.registration_number }}</td>
+                    <td>{{ obj.driver_name }}</td>
+                    <td>{{ obj.process_start }}</td>
+                    <td>{{ obj.process_finish }}</td>
+                    <td style="color: {{ obj.transport_priority.font_color }}; background-color: {{ obj.transport_priority.color }}">{{ obj.transport_priority }}</td>
+                    <td style="color: {{ obj.transport_status.font_color }}; background-color: {{ obj.transport_status.color }}">{{ obj.transport_status }}</td>
+                    <td>{{ obj.supplier }}</td>
+                    <td>{{ obj.carrier }}</td>
+                    <td>{{ obj.gate }}</td>
+                    <td>{{ obj.load|yesno:"áno,nie" }}</td>
+                    <td>{{ obj.unload|yesno:"áno,nie" }}</td>
+                    <td {% if obj.canceled %}class="text-danger"{% endif %}>{{ obj.canceled|yesno:"áno,nie" }}</td>
+                    <td class="text-center"><a href="#" class="transport-detail" hx-get="{% url 'form-creation' %}{{ obj.pk }}" hx-target="#transport-detail"><i class="fas fa-info-circle"></i></a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="d-flex justify-content-between align-items-center">
+            <span>Stránka {{ page_obj.number }} z {{ paginator.num_pages }}</span>
+            <div>
+                <ul class="pagination mb-0">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" data-page="1" href="#">Prvá</a></li>
+                        <li class="page-item"><a class="page-link" data-page="{{ page_obj.previous_page_number }}" href="#">{{ page_obj.previous_page_number }}</a></li>
+                    {% endif %}
+                    <li class="page-item active"><a class="page-link" data-page="{{ page_obj.number }}" href="#">{{ page_obj.number }}</a></li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" data-page="{{ page_obj.next_page_number }}" href="#">{{ page_obj.next_page_number }}</a></li>
+                        <li class="page-item"><a class="page-link" data-page="{{ paginator.num_pages }}" href="#">Posledná</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function fetchTable(url) {
+        $('html, body').animate({scrollTop: '0px'}, 300);
+        htmx.ajax('GET', url, {
+            target: '#table',
+            source: '.table'
+        });
+        window.history.pushState("", "", url);
+    }
+
+    $(function () {
+
+        var queryParams = {{ params|safe }};
+
+        // get page query param out of url
+        delete queryParams.page;
+        var url = {% url 'table' %} + '?' + $.param(queryParams);
+        window.history.pushState("", "", url);
+
+        $('.page-item').click((e) => {
+            e.preventDefault();
+            queryParams.page = e.target.dataset.page;
+            fetchTable({% url 'table' %} + '?' + $.param(queryParams));
+        });
+
+        $('.transport-detail').click((e) => {
+            document.addEventListener('htmx:afterSettle', (e) => {
+                window.modal.show()
+            }, {once: true});
+        });
+
+        document.addEventListener('transportSaved', function () {
+            setTimeout(function () {
+                fetchTable({% url 'table' %} + '?' + $.param(queryParams));
+            }, 300);
+        });
+    });
+</script>
+

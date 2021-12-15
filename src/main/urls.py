@@ -16,19 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from transports.views import form, week, day, table, view_based_on_user_group
-
-
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path("", include("accounts.urls")),
     path("", include("django.contrib.auth.urls")),
-    path("", view_based_on_user_group, name="view_based_on_user_group"),
-    path("form/", form, name="form-creation"),
-    path("form/<int:pk>", form, name="form"),
-    path("tyzden/", week, name="week"),
-    path("den/", day, name="day"),
-    path("tabulka/", table, name="table"),
+    path("", include("transports.urls")),
+    path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

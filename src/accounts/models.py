@@ -76,13 +76,13 @@ class CustomGroup(models.Model):
         verbose_name = "Rozšírené možnosti skupiny"
         verbose_name_plural = "Rozšírené možnosti skupiny"
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.pk:
             if self.allowed_views.all().count() == 0:
                 raise ValidationError("Skupina musí mať aspoň jeden povolený pohľad!")
-            elif self.allowed_views.filter(pk=self.default_view_id).count() == 0:
+            if self.allowed_views.filter(pk=self.default_view_id).count() == 0:
                 raise ValidationError(
                     "Východzí pohľad sa musí nachádzať v povolených pohľadoch!"
                 )
 
-        return super(CustomGroup, self).save()
+        return super(CustomGroup, self).save(*args, **kwargs)
