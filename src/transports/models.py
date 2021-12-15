@@ -24,9 +24,9 @@ class Transport(models.Model):
     process_finish = models.DateTimeField("Koniec spracovania")
     load = models.BooleanField("Nakládka")
     unload = models.BooleanField("Vykládka")
-    transport_priority = models.ForeignKey("TransportPriority", models.CASCADE)
-    transport_status = models.ForeignKey("TransportStatus", models.CASCADE)
-    gate = models.ForeignKey("Gate", models.CASCADE, null=True, blank=True)
+    transport_priority = models.ForeignKey("TransportPriority", models.CASCADE, verbose_name="Priorita")
+    transport_status = models.ForeignKey("TransportStatus", models.CASCADE, verbose_name="Stav")
+    gate = models.ForeignKey("Gate", models.CASCADE, null=True, blank=True, verbose_name="Brána")
     canceled = models.BooleanField("Zrušená", default=False)
     note = models.CharField(
         "Poznámka", blank=True, null=False, default="", max_length=100
@@ -62,11 +62,11 @@ class Transport(models.Model):
             "Preprava EČV " + self.registration_number + " od " + start + " do " + end
         )
 
-    def _format_datetime(self, datetime):
+    def _format_datetime(self, _datetime):
         """
         Utility function to format datetime.
         """
-        return datetime.strftime("%d. %m. %Y %H:%M")
+        return _datetime.strftime("%d. %m. %Y %H:%M")
 
     @property
     def color(self):
@@ -86,7 +86,7 @@ class Transport(models.Model):
         """
 
         # TODO: implementovat vsetky obmedzenia na tvorbu preprav (2 prepravy v rovnakom case na jednej brane atd.)
-        if self.process_finish <= self.process_start:
+        if self.process_finish and self.process_start and self.process_finish <= self.process_start:
             raise ValidationError(
                 {
                     "process_finish": "Spracovanie prepravy musí skončiť neskôr ako jej začiatok."

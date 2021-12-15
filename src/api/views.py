@@ -17,7 +17,7 @@ class TransportList(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
+    def get(self, request):
         start, end = request.GET.get("start", False), request.GET.get("end", False)
         if not start or not end:
             return Response(status.HTTP_400_BAD_REQUEST)
@@ -46,7 +46,7 @@ class TransportUpdate(APIView):
         except Transport.DoesNotExist:
             raise Http404
 
-    def post(self, request, pk, format=None):
+    def post(self, request, pk):
         transport = self.get_object(pk)
         serializer = TransportSerializer(transport, data=request.data, partial=True)
 
@@ -72,11 +72,11 @@ class CarrierCreate(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = CarrierSerializer(None, data=request.data, partial=True)
 
         if serializer.is_valid():
-            carrier = serializer.save();
+            carrier = serializer.save()
             return Response({"status": True, "msg": "Prepravca bol úspešne vytvorený.", "id": carrier.pk})
 
         return Response({"status": False, "msg": "Prepravcu sa nepodarilo vytvoriť."})
@@ -88,11 +88,11 @@ class SupplierCreate(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = SupplierSerializer(None, data=request.data, partial=True)
 
         if serializer.is_valid():
-            supplier = serializer.save();
+            supplier = serializer.save()
             return Response({"status": True, "msg": "Dodávateľ bol úspešne vytvorený.", "id": supplier.pk})
 
         return Response({"status": False, "msg": "Dodávateľa sa nepodarilo vytvoriť."})
