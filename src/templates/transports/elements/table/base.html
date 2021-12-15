@@ -1,0 +1,133 @@
+<div class="container">
+    {% with form=filter.form %}
+        <div class="accordion open accordion-flush mt-4 shadow-sm" id="accordionFilter">
+            <div class="accordion-item border">
+                {{ form.non_field_errors }}
+                <form method="get" id="table-filter" hx-boost="true" hx-target="#table" hx-swap="innerHTML" hx-indicator=".table">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                aria-controls="flush-collapseOne">
+                            <i class="fas fa-filter pe-2"></i>Filter
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse show collapse"
+                         aria-labelledby="flush-headingOne" data-bs-parent="#accordionFilter">
+                        <div class="accordion-body">
+                            <div class="mb-2">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="{{ form.registration_number__icontains.id_for_label }}"
+                                               class="form-label">Evidenčné
+                                            číslo
+                                            vozidla</label>
+                                        {{ form.registration_number__icontains }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.driver_name__icontains.id_for_label }}"
+                                               class="form-label">Meno
+                                            šoféra</label>
+                                        {{ form.driver_name__icontains }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.transport_priority.id_for_label }}"
+                                               class="form-label">Priorita</label>
+                                        {{ form.transport_priority }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.supplier.id_for_label }}"
+                                               class="form-label">Dodávateľ</label>
+                                        {{ form.supplier }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.gate.id_for_label }}" class="form-label">Brána</label>
+                                        {{ form.gate }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.canceled.id_for_label }}"
+                                               class="form-label">Zrušená</label>
+                                        {{ form.canceled }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="{{ form.process_start__gt.id_for_label }}"
+                                               class="form-label">Začiatok</label>
+                                        {{ form.process_start__gt }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.process_start__lt.id_for_label }}"
+                                               class="form-label">Koniec</label>
+                                        {{ form.process_start__lt }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.transport_status.id_for_label }}"
+                                               class="form-label">Stav</label>
+                                        {{ form.transport_status }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.carrier.id_for_label }}"
+                                               class="form-label">Prepravca</label>
+                                        {{ form.carrier }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.load.id_for_label }}"
+                                               class="form-label">Nákladka</label>
+                                        {{ form.load }}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{ form.unload.id_for_label }}"
+                                               class="form-label">Výkladka</label>
+                                        {{ form.unload }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-4 mb-2 justify-content-between">
+                                <div>
+                                    <a class="btn btn-success btn-export" data-format="csv" download><i class="fas fa-file-csv pe-1"></i> CSV Export</a>
+                                    <a class="btn btn-success btn-export" data-format="xlsx" download><i class="fas fa-file-excel pe-1"></i> XLSX Export</a>
+                                </div>
+
+                                <div class="text-end">
+                                    <a href="{% url 'table' %}" class="btn btn-outline-secondary">Zrušiť</a>
+                                    <button class="btn btn-primary">Filtrovať</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endwith %}
+</div>
+
+{% include 'transports/elements/table/transport_table.html' %}
+
+<script>
+    $(function () {
+        // initialize datepickers
+        $.datetimepicker.setLocale('sk');
+        $('#{{ filter.form.process_start__lt.id_for_label }}').datetimepicker({
+            lazyInit: false,
+            format: 'd.m.Y H:i:s'
+        });
+
+        $('#{{ filter.form.process_start__gt.id_for_label }}').datetimepicker({
+            lazyInit: false,
+            format: 'd.m.Y H:i:s',
+        });
+
+        $('select.form-select').select2({width: "100%"});
+        $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+        });
+
+        $('.btn-export').click((e) => {
+            var csvExportUrl = '{% url "export" "*" %}'.slice(0,-2) + e.target.dataset.format + '/?' + $("#table-filter").serialize();
+            window.open(csvExportUrl, '_blank');
+        })
+    });
+</script>

@@ -21,11 +21,11 @@
 
 .bg-primary, .btn-primary {
     background-color: var(--main-blue) !important;
+    border-color: var(--main-blue) !important;
 }
 
 body {
     font-family: 'Exo', sans-serif;
-    overflow: hidden;
 }
 
 .hover-shadow-large {
@@ -251,4 +251,17 @@ a.logout_pic {
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 0.375rem !important;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--bs-body-color) !important;
+    background-color: white !important;
+}
+
+.htmx-request.table {
+    opacity: 0.3;
+}
+
+.table {
+    transition: opacity 0.1s;
 }

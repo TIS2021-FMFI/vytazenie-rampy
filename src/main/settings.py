@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "rest_framework",
     "debug_toolbar",
+    "django_filters"
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,5 @@ LOGIN_URL = "/login/"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+FILTERS_EMPTY_CHOICE_LABEL = 'Všetko'
