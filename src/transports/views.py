@@ -111,6 +111,10 @@ class TableView(UserPassesTestMixin, ListView):
             .exists()
         )
 
+    def handle_no_permission(self):
+        messages.add_message(self.request, messages.ERROR, 'Na zobrazenie tejto časti nemáte právomoc.')
+        return redirect('view_based_on_user_group')
+
     def get_queryset(self):
         queryset = Transport.objects.all().select_related(
             "supplier", "carrier", "transport_status", "transport_priority", "gate"

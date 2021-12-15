@@ -16,9 +16,14 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         validRange: function(nowDate) {
             if (perms.calendar_history) return {};
+            nowDate.setHours(0);
+            var d = new Date(nowDate.getTime());
+            d.setHours(23);
+            d.setMinutes(59);
+            d.setDate(d.getDate() - 1);
 
             return {
-                start: nowDate
+                start: d
             };
         },
         locale: 'sk',
