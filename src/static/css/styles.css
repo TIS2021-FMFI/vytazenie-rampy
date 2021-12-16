@@ -92,7 +92,7 @@ label {
 
 /*NAV PART*/
 
-.horna_navigacia {
+.upper_navigation {
     background: #00538B;
     display: flex;
     align-items: center;
@@ -100,9 +100,10 @@ label {
     height: 100px;
     color: white;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    font-weight: bold;
 }
 
-.kalendar_cast {
+.calendar_part {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -110,25 +111,25 @@ label {
     margin-left: 20px;
 }
 
-.prava_cast {
+.right_part {
     display: flex;
     align-items: center;
     justify-content: space-between;
     max-height: 100%;
 }
 
-.text_cast {
+.text_part {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-right: 2em;
 }
 
-.text_cast a {
+.text_part a {
     transition: color 0.1s;
 }
 
-.text_cast a:hover {
+.text_part a:hover {
     color: var(--main-yellow);
 }
 
@@ -169,20 +170,17 @@ label {
     color: var(--main-blue);
 }
 
-.piktogram {
+.icon {
     max-height: 1em;
     margin-left: 0.5em;
     margin-right: 0.5em;
+    transition: filter 0.1s;
 }
 
 .clickable_text_inside {
     margin-left: 1em;
     margin-right: 1em;
     color: white;
-}
-
-.horna_navigacia {
-    font-weight: bold;
 }
 
 .white-bg {
@@ -211,10 +209,6 @@ a.logout_pic {
     display: block;
 }
 
-.dnes_text a:hover {
-    background-color: yellow;
-}
-
 @keyframes fadeIn {
     from { opacity: 0; }
 }
@@ -228,11 +222,7 @@ a.logout_pic {
     animation: fadeIn 0.5s infinite alternate;
 }
 
-.piktogram {
-    transition: filter 0.1s;
-}
-
-.piktogram:hover {
+.icon:hover {
     filter: brightness(90.1%) sepia(100%) saturate(1000%) hue-rotate(-25deg);
 }
 
