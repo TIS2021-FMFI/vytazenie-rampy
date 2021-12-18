@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var transportId = eventClickInfo.event.extendedProps.transport_id;
 
             modal.show();
-            console.log(document.querySelector('.loading-svg-wrapper'))
             htmx.ajax('GET', base_host + '/form/' + transportId, {
                 target: '#transport-detail',
                 source: '.loading-svg-wrapper'
