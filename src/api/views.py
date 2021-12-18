@@ -1,3 +1,4 @@
+import logging
 from django.http import Http404
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -5,19 +6,22 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from transports.models import Carrier, Transport
+from transports.models import Transport
 from transports.utils import TransportChangeTracker
 from .serializers import CarrierSerializer, SupplierSerializer, TransportSerializer
+
+logger = logging.getLogger(__file__)
 
 
 class TransportList(APIView):
     """
     List all transports scheduled in between requested timestamps. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
+    def get(self, request):
         start, end = request.GET.get("start", False), request.GET.get("end", False)
         if not start or not end:
             return Response(status.HTTP_400_BAD_REQUEST)
@@ -37,6 +41,7 @@ class TransportUpdate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -46,7 +51,7 @@ class TransportUpdate(APIView):
         except Transport.DoesNotExist:
             raise Http404
 
-    def post(self, request, pk, format=None):
+    def post(self, request, pk):
         transport = self.get_object(pk)
         serializer = TransportSerializer(transport, data=request.data, partial=True)
 
@@ -65,34 +70,50 @@ class TransportUpdate(APIView):
 
         return Response({"status": False, "msg": "Prepravu sa nepodarilo upraviť."})
 
+
 class CarrierCreate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = CarrierSerializer(None, data=request.data, partial=True)
 
         if serializer.is_valid():
-            carrier = serializer.save();
-            return Response({"status": True, "msg": "Prepravca bol úspešne vytvorený.", "id": carrier.pk})
+            carrier = serializer.save()
+            return Response(
+                {
+                    "status": True,
+                    "msg": "Prepravca bol úspešne vytvorený.",
+                    "id": carrier.pk,
+                }
+            )
 
         return Response({"status": False, "msg": "Prepravcu sa nepodarilo vytvoriť."})
+
 
 class SupplierCreate(APIView):
     """
     Update transport's processing datetimes. Used by fullcalendar.io library.
     """
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = SupplierSerializer(None, data=request.data, partial=True)
 
         if serializer.is_valid():
-            supplier = serializer.save();
-            return Response({"status": True, "msg": "Dodávateľ bol úspešne vytvorený.", "id": supplier.pk})
+            supplier = serializer.save()
+            return Response(
+                {
+                    "status": True,
+                    "msg": "Dodávateľ bol úspešne vytvorený.",
+                    "id": supplier.pk,
+                }
+            )
 
         return Response({"status": False, "msg": "Dodávateľa sa nepodarilo vytvoriť."})

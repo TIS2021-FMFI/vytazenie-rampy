@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "rest_framework",
     "debug_toolbar",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -80,9 +81,9 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': BASE_DIR / 'tmp',
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": BASE_DIR / "tmp",
     }
 }
 
@@ -146,3 +147,42 @@ LOGIN_URL = "/login/"
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+FILTERS_EMPTY_CHOICE_LABEL = "Všetko"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime}: {module} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "logfile": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "log/debug.log",
+            "maxBytes": 100000,
+            "backupCount": 2,
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["logfile"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+        "apps": {
+            "handlers": ["logfile"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+    },
+}

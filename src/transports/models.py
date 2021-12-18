@@ -1,10 +1,14 @@
+import logging
 from typing import Union
 from datetime import datetime
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
 
 from django.db import models
 from model_utils import FieldTracker
 from dateutil import parser
+
+logger = logging.getLogger(__file__)
 
 
 class Transport(models.Model):
@@ -24,9 +28,15 @@ class Transport(models.Model):
     process_finish = models.DateTimeField("Koniec spracovania")
     load = models.BooleanField("Nakládka")
     unload = models.BooleanField("Vykládka")
-    transport_priority = models.ForeignKey("TransportPriority", models.CASCADE)
-    transport_status = models.ForeignKey("TransportStatus", models.CASCADE)
-    gate = models.ForeignKey("Gate", models.CASCADE, null=True, blank=True)
+    transport_priority = models.ForeignKey(
+        "TransportPriority", models.CASCADE, verbose_name="Priorita"
+    )
+    transport_status = models.ForeignKey(
+        "TransportStatus", models.CASCADE, verbose_name="Stav"
+    )
+    gate = models.ForeignKey(
+        "Gate", models.CASCADE, null=True, blank=True, verbose_name="Brána"
+    )
     canceled = models.BooleanField("Zrušená", default=False)
     note = models.CharField(
         "Poznámka", blank=True, null=False, default="", max_length=100
@@ -62,11 +72,11 @@ class Transport(models.Model):
             "Preprava EČV " + self.registration_number + " od " + start + " do " + end
         )
 
-    def _format_datetime(self, datetime):
+    def _format_datetime(self, _datetime):
         """
         Utility function to format datetime.
         """
-        return datetime.strftime("%d. %m. %Y %H:%M")
+        return _datetime.strftime("%d. %m. %Y %H:%M")
 
     @property
     def color(self):
@@ -86,12 +96,24 @@ class Transport(models.Model):
         """
 
         # TODO: implementovat vsetky obmedzenia na tvorbu preprav (2 prepravy v rovnakom case na jednej brane atd.)
-        if self.process_finish <= self.process_start:
+        if (
+            self.process_finish
+            and self.process_start
+            and self.process_finish <= self.process_start
+        ):
             raise ValidationError(
                 {
                     "process_finish": "Spracovanie prepravy musí skončiť neskôr ako jej začiatok."
                 }
             )
+
+
+def get_model_choices_cache_key(model):
+    return model.__name__ + "_choices"
+
+
+def invalidate_form_cache(cls):
+    return cache.delete(get_model_choices_cache_key(cls))
 
 
 class Gate(models.Model):
@@ -104,6 +126,10 @@ class Gate(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
+
 
 class Supplier(models.Model):
     name = models.CharField("Názov", max_length=100)
@@ -114,6 +140,10 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
 
 
 class Carrier(models.Model):
@@ -126,6 +156,10 @@ class Carrier(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
+
 
 class TransportPriority(models.Model):
     name = models.CharField("Názov", max_length=50)
@@ -137,10 +171,14 @@ class TransportPriority(models.Model):
     class Meta:
         verbose_name_plural = "Priority prepráv"
         verbose_name = "Priorita prepráv"
-        ordering = ['sort']
+        ordering = ["sort"]
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
 
 
 class TransportStatus(models.Model):
@@ -153,7 +191,11 @@ class TransportStatus(models.Model):
     class Meta:
         verbose_name_plural = "Stavy prepráv"
         verbose_name = "Stav prepráv"
-        ordering = ['sort']
+        ordering = ["sort"]
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)

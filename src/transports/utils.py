@@ -1,8 +1,11 @@
 import json
+import logging
 from django.forms.models import model_to_dict
 
 from .forms import TransportForm
 from modifications.models import TransportModification
+
+logger = logging.getLogger(__file__)
 
 
 class TransportChangeTracker:
