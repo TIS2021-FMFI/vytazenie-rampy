@@ -36,9 +36,15 @@
             <div class="dropdown">
                 <a href="#" class="clickable_text_inside">Stránky <i class="fas fa-caret-down fs-6"></i></a>
                 <div class="dropdown_item">
+                    {% if perms.accounts.weekly_view%}
                     <a href="{% url 'week' %}">Týždenný pohľad</a>
+                    {% endif %}
+                    {% if perms.accounts.daily_view%}
                     <a href="{% url 'day' %}">Denný pohľad</a>
+                    {% endif %}
+                    {% if request.user.is_superuser%}
                     <a href="{% url 'table' %}">Tabuľkový pohľad</a>
+                    {% endif %}
                 </div>
             </div>
             <!-- funguje-->

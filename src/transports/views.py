@@ -71,16 +71,79 @@ def form(request, pk=None):
 
     if request.user.is_superuser:
         # if user is administrator, include transport modifications in context
-        context["changes"] = (
+
+        changes = (
             TransportModification.objects.filter(transport_id=pk)
             .order_by("created")
             .all()
         )
+        changes_parsed = []
+        for change in changes:
+            changes_dict = json.loads(change.changes)
+
+            changes_parsed.append({
+                "date": change.created,
+                "user": str(change.user),
+                "changes": _parse_transport_modification_changes(changes_dict)
+            })
+        context["changes_parsed"] = changes_parsed
+
+        latest_changes = create_latest_changes(changes)
+        context["latest_changes"] = latest_changes
 
     return render(request, "transports/elements/form.html", context)
 
+def _parse_transport_modification_changes(changes):
+    changes_str = []
+    for field in changes:
+        field_name = Transport._meta.get_field(field).verbose_name
+        changes_str.append(f'{field_name}: {changes[field]["BEFORE"]} -> {changes[field]["AFTER"]}')
+    return changes_str
 
-@cache_page(600)
+def create_latest_changes(changes):
+    #array = changes["changes"]
+    my_dict = {
+        "process_start": None,
+        "process_finish": None,
+        "registration_number": None,
+        "driver_name": None,
+        "supplier": None,
+        "carrier": None,
+        "transport_priority": None,
+        "transport_status": None,
+        "gate": None,
+        "note": None,
+        "load": None,
+        "unload": None,
+        "canceled": None
+    }
+    for change in reversed(changes[1:]):
+        changes_dict = json.loads(change.changes)
+        for field in changes_dict:
+            field_name = Transport._meta.get_field(field).verbose_name
+            #check if field is string
+            res = isinstance(field, str)
+            if res:
+                x = field.replace("_id","")
+            else:
+                x = field
+            if my_dict[x] != None:
+                continue
+            #check if before and after are strings
+            res = isinstance(changes_dict[field]["BEFORE"], str)
+            if res:
+                before = changes_dict[field]["BEFORE"].replace("_id", "")
+                after = changes_dict[field]["AFTER"].replace("_id", "")
+            else:
+                before = changes_dict[field]["BEFORE"]
+                after = changes_dict[field]["AFTER"]
+            
+            my_dict[x] = f'{str(change.user)}: {before} -> {after}'
+            if all([x is not None for x in my_dict.values()]):
+                return my_dict
+                
+    return my_dict
+
 @user_passes_test(
     lambda user: user.is_superuser
     or user.groups.first().custom_group.allowed_views.filter(view="week").exists(),

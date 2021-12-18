@@ -13,7 +13,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.registration_number.id_for_label }}" class="form-label">Evidenčné číslo vozidla</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.registration_number %}
                     </div>
                     {{form.registration_number}}
                     <div class="invalid-feedback">
@@ -23,7 +23,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.transport_priority.id_for_label }}" class="form-label">Priorita</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.transport_priority %}
                     </div>
                     {{ form.transport_priority }}
                     <div class="invalid-feedback">
@@ -37,7 +37,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.driver_name.id_for_label }}" class="form-label">Meno šoféra</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.driver_name %}
                     </div>
                     {{form.driver_name}}
                     <div class="invalid-feedback">
@@ -47,7 +47,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.transport_status.id_for_label }}" class="form-label">Stav</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.transport_status %}
                     </div>
                     {{ form.transport_status }}
                     <div class="invalid-feedback">
@@ -61,7 +61,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.supplier.id_for_label }}" class="form-label">Dodávateľ</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.supplier %}
                     </div>
                     {{ form.supplier }}
                     <div class="invalid-feedback">
@@ -71,7 +71,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.gate.id_for_label }}" class="form-label">Brána</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.gate %}
                     </div>
                     {{ form.gate }}
                     <div class="invalid-feedback">
@@ -85,7 +85,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.carrier.id_for_label }}" class="form-label">Dopravca</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.carrier %}
                     </div>
                     {{form.carrier}}
                     <div class="invalid-feedback">
@@ -95,7 +95,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.note.id_for_label }}" class="form-label">Poznámka</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.note %}
                     </div>
                     {{form.note}}
                     <div class="invalid-feedback">
@@ -109,7 +109,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.process_start.id_for_label }}" class="form-label">Začiatok spracovania</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.process_start %}
                     </div>
                     {{ form.process_start }}
                     <div class="invalid-feedback">
@@ -119,7 +119,7 @@
                 <div class="col">
                     <div class="d-flex justify-content-between">
                         <label for="{{ form.process_finish.id_for_label }}" class="form-label">Koniec spracovania</label>
-                        {% include 'transports/elements/field_change.html' %}
+                        {% include 'transports/elements/field_change.html' with text=latest_changes.process_finish %}
                     </div>
                     {{ form.process_finish }}
                     <div class="invalid-feedback">
@@ -138,7 +138,7 @@
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.load.id_for_label }}">Nakládka</label>
                                     {% if request.user.is_superuser %}
-                                    {% include 'transports/elements/field_change.html' %}
+                                    {% include 'transports/elements/field_change.html' with text=latest_changes.load %}
                                     {% endif %}
                                 </div>
                                 <div class="invalid-feedback">
@@ -152,7 +152,7 @@
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.unload.id_for_label }}">Vykládka</label>
                                     {% if request.user.is_superuser %}
-                                    {% include 'transports/elements/field_change.html' %}
+                                    {% include 'transports/elements/field_change.html' with text=latest_changes.unload %}
                                     {% endif %}
                                 </div>
                                 <div class="invalid-feedback">
@@ -168,7 +168,7 @@
                         <div class="d-flex justify-content-between">
                             <label class="form-check-label" for="{{ form.canceled.id_for_label }}">Zrušená</label>
                             {% if request.user.is_superuser %}
-                                {% include 'transports/elements/field_change.html' %}
+                                {% include 'transports/elements/field_change.html' with text=latest_changes.canceled %}
                             {% endif %}
                         </div>
                     </div>
@@ -181,10 +181,25 @@
                 </div>
                 <div class="col text-end">
                     {% if request.user.is_superuser %}
-                        <button type="button" class="btn btn-info">Zobraziť zmeny</button>
+                        <button type="button" class="btn btn-info" id="btn-toggle-show-changes">Zobraziť zmeny</button>
                     {% endif %}
                     <button type="submit" class="btn btn-success">Uložiť zmeny</button>
                 </div>
+
+                <div id="show-changes"> 
+                    {% if request.user.is_superuser %}
+                        {% for change in changes_parsed %}
+                            <li>
+                                <small><i>{{change.date}}</i></small> by {{change.user}}
+                                {% for item in change.changes %}
+                                    <br> {{item}}
+                                {% endfor %}
+                                
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
             </div>
         </div>
     </form>
@@ -302,6 +317,9 @@
             {% if request.user.is_superuser %}
                 tippy('[data-tippy-content]');
             {% endif %}
+        });
+        $("#btn-toggle-show-changes").click(function (e) { 
+            $("#show-changes").toggle(); 
         });
     </script>
 </div>

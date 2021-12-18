@@ -255,6 +255,10 @@ a.logout_pic {
 .icon:hover {
     filter: brightness(90.1%) sepia(100%) saturate(1000%) hue-rotate(-25deg);
 }
+/* detail extended changes */
+#show-changes { 
+    display: none; 
+}
 
 /* FORM SELECT */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
