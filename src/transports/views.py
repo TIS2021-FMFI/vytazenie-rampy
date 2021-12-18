@@ -1,6 +1,8 @@
 import json
 import pathlib
 import csv
+import logging
+
 from collections import OrderedDict
 from datetime import datetime
 from django.contrib import messages
@@ -9,6 +11,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.cache import cache
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import cache_page
 from django.views.generic.list import ListView
 from openpyxl import Workbook
 from .forms import TransportForm
@@ -17,7 +20,10 @@ from .utils import TransportChangeTracker
 from .models import Transport, TransportPriority, TransportStatus
 from modifications.models import TransportModification
 
+logger = logging.getLogger(__file__)
 
+
+@cache_page(3600)
 @login_required
 def view_based_on_user_group(request):
     return redirect(request.user.groups.first().custom_group.default_view.view)
@@ -57,7 +63,7 @@ def form(request, pk=None):
 
     # get instance if primary key is provided
     if _form is None:
-        _form = TransportForm(instance=inst, initial=_get_default_transport_data())
+        _form = TransportForm(instance=inst, initial=_get_default_transport_data() if pk is None else {})
 
     context = {"form": _form, "saved": saved}
 
@@ -72,6 +78,8 @@ def form(request, pk=None):
     return render(request, "transports/elements/form.html", context)
 
 
+
+@cache_page(600)
 @user_passes_test(
     lambda user: user.is_superuser
     or user.groups.first().custom_group.allowed_views.filter(view="week").exists(),
@@ -118,7 +126,7 @@ class TableView(UserPassesTestMixin, ListView):
     def get_queryset(self):
         queryset = Transport.objects.all().select_related(
             "supplier", "carrier", "transport_status", "transport_priority", "gate"
-        )
+        ).order_by('-process_start')
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         return self.filterset.qs.distinct()
 

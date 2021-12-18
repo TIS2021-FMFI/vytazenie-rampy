@@ -1,4 +1,4 @@
-import { getCookie, showLoader, hideLoader } from './main';
+import {getCookie, showLoader, hideLoader} from './main';
 
 document.addEventListener('DOMContentLoaded', function () {
     // used for time where the calendar is initially scrolled at
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
             center: null,
             end: null
         },
-        validRange: function(nowDate) {
+        validRange: function (nowDate) {
             if (perms.calendar_history) return {};
             nowDate.setHours(0);
             var d = new Date(nowDate.getTime());
@@ -38,11 +38,18 @@ document.addEventListener('DOMContentLoaded', function () {
         themeSystem: 'bootstrap',
         events: transports_list_url, // url to fetch transports from,
         loading: function (isLoading) {
-            if (isLoading) showLoader();
-            else hideLoader();
+            if (isLoading) {
+                calendarEl.classList.add('calendar-loading');
+                showLoader();
+            } else {
+                hideLoader();
+                calendarEl.classList.remove('calendar-loading');
+            }
         },
         eventSourceSuccess: function (content, xhr) {
             hideLoader();
+            calendarEl.classList.remove('calendar-loading');
+
             // gets called on successful fetch from api
             var eventArray = [];
 
@@ -66,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // normally the event title gets escaped,
             // so this way we can display html in the event's body
             var htmlWrapper = '<div class="p-1">' + eventInfo.timeText + '<br>' + eventInfo.event.extendedProps.customHtml + '</div>';
-            return { html: htmlWrapper }
+            return {html: htmlWrapper}
         },
         eventChange: function (changeInfo) {
             // gets called when any event is changed (moved, shortened, ...)
@@ -81,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             showLoader();
+            calendarEl.classList.add('loading-calendar');
 
             // update transport on api
             fetch(base_host + '/api/transports/' + event.extendedProps.transport_id + '/', {
@@ -97,6 +105,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then((data) => {
                     $.notify(data.msg, data.status ? 'success' : 'error');
                     hideLoader();
+                    calendarEl.style.opacity = 'initial';
+                    setTimeout(function () {
+                        calendarEl.classList.remove('loading-calendar');
+                        calendarEl.style.opacity = null;
+                    }, 100);
                 })
         },
         eventClick: function (eventClickInfo) { // when user clicks on event, show modal with transport detail
@@ -106,7 +119,11 @@ document.addEventListener('DOMContentLoaded', function () {
             var transportId = eventClickInfo.event.extendedProps.transport_id;
 
             modal.show();
-            htmx.ajax('GET', base_host + '/form/' + transportId, '#transport-detail');
+            console.log(document.querySelector('.loading-svg-wrapper'))
+            htmx.ajax('GET', base_host + '/form/' + transportId, {
+                target: '#transport-detail',
+                source: '.loading-svg-wrapper'
+            });
         },
         scrollTime: date.toTimeString(), // scroll to current time
         editable: perms.calendar_editable,

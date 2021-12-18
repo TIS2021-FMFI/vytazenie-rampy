@@ -134,7 +134,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="{{ form.load.id_for_label }}" name="{{ form.load.html_name }}" {% if form.load.value %}checked="checked"{%endif%}>
+                                {{ form.load }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.load.id_for_label }}">Nakládka</label>
                                     {% if request.user.is_superuser %}
@@ -148,7 +148,7 @@
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="{{ form.unload.id_for_label }}" name="{{ form.unload.html_name }}" {% if form.unload.value %}checked="checked"{%endif%}>
+                                {{ form.unload }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.unload.id_for_label }}">Vykládka</label>
                                     {% if request.user.is_superuser %}
@@ -164,7 +164,7 @@
                 </div>
                 <div class="col">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="{{ form.canceled.id_for_label }}" name="{{ form.canceled.html_name }}" {% if form.canceled.value %}checked="checked"{%endif%}>
+                        {{ form.canceled }}
                         <div class="d-flex justify-content-between">
                             <label class="form-check-label" for="{{ form.canceled.id_for_label }}">Zrušená</label>
                             {% if request.user.is_superuser %}

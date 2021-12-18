@@ -1,10 +1,14 @@
+import logging
 from typing import Union
 from datetime import datetime
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
 
 from django.db import models
 from model_utils import FieldTracker
 from dateutil import parser
+
+logger = logging.getLogger(__file__)
 
 
 class Transport(models.Model):
@@ -104,6 +108,14 @@ class Transport(models.Model):
             )
 
 
+def get_model_choices_cache_key(model):
+    return model.__name__ + "_choices"
+
+
+def invalidate_form_cache(cls):
+    return cache.delete(get_model_choices_cache_key(cls))
+
+
 class Gate(models.Model):
     name = models.CharField("Názov", max_length=20)
 
@@ -113,6 +125,10 @@ class Gate(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
 
 
 class Supplier(models.Model):
@@ -125,6 +141,10 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
+
 
 class Carrier(models.Model):
     name = models.CharField("Názov", max_length=100)
@@ -135,6 +155,10 @@ class Carrier(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
 
 
 class TransportPriority(models.Model):
@@ -152,6 +176,10 @@ class TransportPriority(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)
+
 
 class TransportStatus(models.Model):
     name = models.CharField("Názov", max_length=30)
@@ -167,3 +195,7 @@ class TransportStatus(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        invalidate_form_cache(self.__class__)
+        super().save(*args, **kwargs)

@@ -19,6 +19,11 @@
     height: calc(100vh - 100px);
 }
 
+.loading-calendar {
+    opacity: 0.3;
+    transition: opacity 0.1s;
+}
+
 .bg-primary, .btn-primary {
     background-color: var(--main-blue) !important;
     border-color: var(--main-blue) !important;
@@ -46,7 +51,7 @@ body {
 }
 
 .fc-timegrid tr {
-    height: 3em;
+    height: 2em;
 }
 
 .fc-timegrid-event {
@@ -54,16 +59,41 @@ body {
 }
 
 .fc .fc-timegrid-col.fc-day-today {
-    background: var(--secondary-red-light) !important;
+    background: var(--secondary-green-light) !important;
 }
 
-tr:nth-child(odd) {
+.table-bordered td.fc-timegrid-slot.fc-timegrid-slot-lane  {
     border-color: var(--secondary-gray-light);
     border-right-color: inherit;
+    border-width: 2px;
+}
+
+.table-bordered > :not(caption) > * {
+    border: none;
+}
+
+.fc-timegrid-slot-label-cushion.fc-scrollgrid-shrink-cushion {
+    color: var(--secondary-gray);
+    font-weight: bolder;
+}
+
+.fc .fc-timegrid-slot-label {
+    vertical-align: top !important;
 }
 
 .fc-scrollgrid-section-header {
     border: 1px solid black;
+}
+
+td.fc-timegrid-slot-minor:not(.fc-timegrid-slot-label) {
+    border-top-style: solid !important;
+    border-top-width: 1px !important;
+}
+
+.fc-timegrid-col {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-color: var(--secondary-gray-light);
 }
 
 .event-ribbon {
@@ -264,4 +294,24 @@ a.logout_pic {
 
 .table {
     transition: opacity 0.1s;
+}
+
+.loading-svg {
+    top: 250px;
+    left: 330px;
+    transition: opacity 0.2s;
+    position: absolute;
+}
+.loading-svg-wrapper {
+    text-align: center;
+}
+.loading-svg-wrapper > .loading-svg {
+    opacity: 0;
+}
+.loading-svg-wrapper.htmx-request {
+    display: block;
+    height: 590px;
+}
+.loading-svg-wrapper.htmx-request > .loading-svg {
+    opacity: 1;
 }
