@@ -23,7 +23,6 @@ from modifications.models import TransportModification
 logger = logging.getLogger(__file__)
 
 
-@cache_page(3600)
 @login_required
 def view_based_on_user_group(request):
     return redirect(request.user.groups.first().custom_group.default_view.view)
@@ -80,7 +79,6 @@ def form(request, pk=None):
     return render(request, "transports/elements/form.html", context)
 
 
-@cache_page(600)
 @user_passes_test(
     lambda user: user.is_superuser
     or user.groups.first().custom_group.allowed_views.filter(view="week").exists(),
