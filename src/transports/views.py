@@ -63,7 +63,9 @@ def form(request, pk=None):
 
     # get instance if primary key is provided
     if _form is None:
-        _form = TransportForm(instance=inst, initial=_get_default_transport_data() if pk is None else {})
+        _form = TransportForm(
+            instance=inst, initial=_get_default_transport_data() if pk is None else {}
+        )
 
     context = {"form": _form, "saved": saved}
 
@@ -76,7 +78,6 @@ def form(request, pk=None):
         )
 
     return render(request, "transports/elements/form.html", context)
-
 
 
 @cache_page(600)
@@ -120,13 +121,19 @@ class TableView(UserPassesTestMixin, ListView):
         )
 
     def handle_no_permission(self):
-        messages.add_message(self.request, messages.ERROR, 'Na zobrazenie tejto časti nemáte právomoc.')
-        return redirect('view_based_on_user_group')
+        messages.add_message(
+            self.request, messages.ERROR, "Na zobrazenie tejto časti nemáte právomoc."
+        )
+        return redirect("view_based_on_user_group")
 
     def get_queryset(self):
-        queryset = Transport.objects.all().select_related(
-            "supplier", "carrier", "transport_status", "transport_priority", "gate"
-        ).order_by('-process_start')
+        queryset = (
+            Transport.objects.all()
+            .select_related(
+                "supplier", "carrier", "transport_status", "transport_priority", "gate"
+            )
+            .order_by("-process_start")
+        )
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         return self.filterset.qs.distinct()
 

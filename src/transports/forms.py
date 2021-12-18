@@ -1,7 +1,15 @@
 import logging
 from django import forms
 from django.core.cache import cache
-from .models import Transport, TransportPriority, TransportStatus, Gate, Supplier, Carrier, get_model_choices_cache_key
+from .models import (
+    Transport,
+    TransportPriority,
+    TransportStatus,
+    Gate,
+    Supplier,
+    Carrier,
+    get_model_choices_cache_key,
+)
 
 logger = logging.getLogger(__file__)
 
@@ -12,11 +20,11 @@ default_attrs = {
 }
 
 fk_fields = {
-    'transport_priority': TransportPriority,
-    'transport_status': TransportStatus,
-    'gate': Gate,
-    'supplier': Supplier,
-    'carrier': Carrier
+    "transport_priority": TransportPriority,
+    "transport_status": TransportStatus,
+    "gate": Gate,
+    "supplier": Supplier,
+    "carrier": Carrier,
 }
 
 
@@ -73,6 +81,9 @@ class TransportForm(DefaultBootstrapForm):
 
     def _get_model_choices(self, model):
         cache_key = get_model_choices_cache_key(model)
-        choices = cache.get_or_set(cache_key, [(choice.pk, str(choice)) for choice in model.objects.all()],
-                                   self.MODEL_CHOICES_CACHE_DURATION)
+        choices = cache.get_or_set(
+            cache_key,
+            [(choice.pk, str(choice)) for choice in model.objects.all()],
+            self.MODEL_CHOICES_CACHE_DURATION,
+        )
         return choices
