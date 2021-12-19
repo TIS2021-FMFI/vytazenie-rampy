@@ -1,8 +1,12 @@
 import json
+import logging
 from django.forms.models import model_to_dict
 
 from .forms import TransportForm
 from modifications.models import TransportModification
+from transports.models import Transport
+
+logger = logging.getLogger(__file__)
 
 
 class TransportChangeTracker:
@@ -35,6 +39,9 @@ class TransportChangeTracker:
         self.save_instance = value
 
     def track(self):
+        """
+        Track changes on Transport model instances.
+        """
         self.obj = self.form.save(commit=False)
 
         if len(self.obj.tracker.changed()) > 0:
@@ -42,7 +49,9 @@ class TransportChangeTracker:
             # track changes from form values
             changes = {}
             for field, value in self.obj.tracker.changed().items():
-                changes[field] = {"BEFORE": value, "AFTER": getattr(self.obj, field)}
+                if value != getattr(self.obj, field):
+                    before, after = self._get_value(self.obj, field, value), self._get_value(self.obj, field)
+                    changes[field] = {"BEFORE": before, "AFTER": after}
 
             if self.save_instance:
                 self.obj.save()
@@ -55,3 +64,20 @@ class TransportChangeTracker:
                     changes, default=str
                 ),  # default=str kedze datetime neni serializable
             ).save()
+
+    def _get_value(self, instance, field, override_value=None):
+        """
+        Get instance's field value. Related fields (FK, M2M) return name of the related
+        model instance.
+        """
+        if 'id' not in field:
+            return getattr(instance, field)
+
+        related_model = getattr(Transport, field).descriptor.field.related_model
+        instances = related_model.fetch_instances()
+
+        # if we don't want to access actual value in instance, but use the
+        # provided one
+        instance_id = override_value or getattr(instance, field)
+
+        return instances.get(instance_id, instance_id)

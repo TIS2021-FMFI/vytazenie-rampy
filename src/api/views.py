@@ -1,3 +1,4 @@
+import logging
 from django.http import Http404
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -5,9 +6,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from transports.models import Carrier, Transport
+from transports.models import Transport
 from transports.utils import TransportChangeTracker
 from .serializers import CarrierSerializer, SupplierSerializer, TransportSerializer
+
+logger = logging.getLogger(__file__)
 
 
 class TransportList(APIView):

@@ -14,8 +14,8 @@
     const transports_list_url = '{{ request.scheme }}://{{ request.get_host }}{% url "api-transports-list" %}';
     const base_host = '{{ request.scheme }}://{{ request.get_host }}';
     const perms = {
-      calendar_history: {% if perms.transports.calendar_history %}true{% else %}false{% endif %},
-      calendar_editable: {% if perms.transports.calendar_editable %}true{% else %}false{% endif %}
+      calendar_history: {% if perms.accounts.calendar_history %}true{% else %}false{% endif %},
+      calendar_editable: {% if perms.accounts.calendar_editable %}true{% else %}false{% endif %}
     };
   </script>
 {% endblock %}

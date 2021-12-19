@@ -1,0 +1,1 @@
+[{"model": "transports.transportpriority", "pk": 1, "fields": {"name": "Štandardná", "color": "#ffffff", "font_color": "#000000", "sort": 1, "is_default": true}}, {"model": "transports.transportpriority", "pk": 2, "fields": {"name": "Vysoká", "color": "#AE1022", "font_color": "#FFF", "sort": 2, "is_default": false}}]

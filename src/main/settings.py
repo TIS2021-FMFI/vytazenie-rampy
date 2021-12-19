@@ -149,3 +149,40 @@ INTERNAL_IPS = [
 ]
 
 FILTERS_EMPTY_CHOICE_LABEL = "Všetko"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime}: {module} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "logfile": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "debug.log",
+            "maxBytes": 100000,
+            "backupCount": 2,
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["logfile"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+        "apps": {
+            "handlers": ["logfile"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+    },
+}
