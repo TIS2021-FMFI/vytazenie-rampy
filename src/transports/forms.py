@@ -8,7 +8,7 @@ from .models import (
     Gate,
     Supplier,
     Carrier,
-    get_model_choices_cache_key,
+    CachedModel,
 )
 
 logger = logging.getLogger(__file__)
@@ -80,7 +80,7 @@ class TransportForm(DefaultBootstrapForm):
         return is_valid
 
     def _get_model_choices(self, model):
-        cache_key = get_model_choices_cache_key(model)
+        cache_key = CachedModel.get_model_choices_cache_key(model)
         choices = cache.get_or_set(
             cache_key,
             [(choice.pk, str(choice)) for choice in model.objects.all()],
