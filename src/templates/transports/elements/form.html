@@ -226,6 +226,7 @@
             $('#{{ form.process_start.id_for_label }}').datetimepicker({
                 lazyInit: false,
                 format:'d.m.Y H:i:s',
+                dayOfWeekStart: 1,
                 onChangeDateTime: function (dp, input) {
                     input.val(formatDate(dp));
 
@@ -239,13 +240,16 @@
             $('#{{ form.process_finish.id_for_label }}').datetimepicker({
                 lazyInit: false,
                 format:'d.m.Y H:i:s',
+                dayOfWeekStart: 1
             });
 
+            // initialize select inputs
             $('select.form-select').select2({
                 dropdownParent: $('#modal'),
                 width: "100%",
                 tags: true,
                 createTag: function (params) {
+                    // ability to create new model instances via select
                     var inputId = this.$element.attr('id');
                     var validInputIds = ['id_supplier', 'id_carrier'];
 
@@ -303,6 +307,7 @@
                 });
             });
 
+            // focus search field on select open
             $(document).on('select2:open', () => {
                 document.querySelector('.select2-search__field').focus();
             });
@@ -322,6 +327,8 @@
                 tippy('[data-tippy-content]');
             {% endif %}
         });
+
+        // toggle changes div
         $("#btn-toggle-show-changes").click(function (e) {
             $("#show-changes").toggle();
         });

@@ -2,6 +2,7 @@ import json
 import pathlib
 import csv
 import logging
+import time
 from collections import OrderedDict
 from dateutil import parser
 from datetime import datetime
@@ -68,27 +69,31 @@ def form(request, pk=None):
 
     context = {"form": _form, "saved": saved}
 
-    if request.user.is_superuser:
+    if request.user.is_superuser and request.method == "GET":
         # if user is administrator, include transport modifications in context
-
-        changes = (
+        changes = tuple(
             TransportModification.objects.filter(transport_id=pk)
             .order_by("created")
             .all()
         )
-        changes_parsed = []
-        for change in changes:
-            changes_dict = json.loads(change.changes)
 
-            changes_parsed.append({
-                "date": change.created,
-                "user": str(change.user),
-                "changes": _parse_transport_modification_changes(changes_dict)
-            })
-        context["changes_parsed"] = changes_parsed
+        # first fetch from cache, if not available, parse changes
+        cache_key = 'transport_modifications_' + str(hash(changes))
+        changes_cached = cache.get(cache_key)
+        if changes_cached is not None:
+            context.update(changes_cached)
+        else:
+            context['changes_parsed'] = []
+            for change in changes:
+                changes_dict = json.loads(change.changes)
+                context["changes_parsed"].append({
+                    "date": change.created,
+                    "user": str(change.user),
+                    "changes": _parse_transport_modification_changes(changes_dict)
+                })
 
-        latest_changes = _create_latest_changes(changes)
-        context["latest_changes"] = latest_changes
+            context["latest_changes"] = _create_latest_changes(changes)
+            cache.set(cache_key, {"latest_changes": context["latest_changes"], "changes_parsed": context["changes_parsed"]})
 
     return render(request, "transports/elements/form.html", context)
 
@@ -126,18 +131,18 @@ def _create_latest_changes(changes):
     for change in reversed(changes[1:]):
         changes_dict = json.loads(change.changes)
         for field in changes_dict:
-            field_name = Transport._meta.get_field(field).verbose_name
             #check if field is string
             res = isinstance(field, str)
             if res:
                 x = field.replace("_id","")
             else:
                 x = field
-            if my_dict[x] != None:
+
+            if my_dict[x] is not None:
                 continue
+
             #check if before and after are strings
-            res = isinstance(changes_dict[field]["BEFORE"], str)
-            if res:
+            if isinstance(changes_dict[field]["BEFORE"], str):
                 before = changes_dict[field]["BEFORE"].replace("_id", "")
                 after = changes_dict[field]["AFTER"].replace("_id", "")
             else:
@@ -145,6 +150,7 @@ def _create_latest_changes(changes):
                 after = changes_dict[field]["AFTER"]
 
             my_dict[x] = f'{str(change.user)}: {_format_change_value(before)} -> {_format_change_value(after)}'
+
             if all([x is not None for x in my_dict.values()]):
                 return my_dict
 
@@ -158,10 +164,20 @@ def _create_latest_changes(changes):
     "",
 )
 def week(request):
+    context = {
+        "title_appendix": "Týždenný pohľad",
+        "calendar_controls": True,
+        "color_helper" : {
+            "load": Transport.LOAD_COLOR,
+            "unload": Transport.UNLOAD_COLOR,
+            "both": Transport.BOTH_COLOR
+        }
+    }
+
     return render(
         request,
         "transports/week.html",
-        {"title_appendix": "Týždenný pohľad", "calendar_controls": True},
+        context,
     )
 
 

@@ -1,5 +1,6 @@
 import json
 import logging
+from django.db import transaction
 from django.forms.models import model_to_dict
 
 from .forms import TransportForm
@@ -38,6 +39,7 @@ class TransportChangeTracker:
     def set_save_instance(self, value):
         self.save_instance = value
 
+    @transaction.atomic
     def track(self):
         """
         Track changes on Transport model instances.

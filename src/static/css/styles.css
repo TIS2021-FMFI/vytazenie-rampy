@@ -315,3 +315,35 @@ a.logout_pic {
     font-size: 0.8em;
     color: var(--secondary-gray);
 }
+#color-helper {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    background: black;
+    height: 30px;
+    width: 30px;
+    z-index: 2000;
+    border-radius: 18px;
+    color: white;
+    text-align: center;
+    font-size: 0.9em;
+    padding-top: 4px;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.1s;
+}
+#color-helper:hover {
+    opacity: 0.8;
+}
+.color-type {
+    display: inline-block;
+    height: 0.9em;
+    width: 0.9em;
+    border-radius: 20px;
+    margin-top: 3px;
+}
+
+#week_day_text {
+    min-width: 220px;
+    text-align:center;
+}
