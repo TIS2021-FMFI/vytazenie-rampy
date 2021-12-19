@@ -173,7 +173,8 @@ def week(request):
     "",
 )
 def day(request):
-    return render(request, "transports/day.html", {"title_appendix": "Denný pohľad"})
+    transports = Transport.find_objects_between_timestamps(datetime.today().replace(hour=0, minute=0, second=0), datetime.today().replace(hour=23, minute=59, second=59))
+    return render(request, "transports/day.html", {"title_appendix": "Denný pohľad", "transports": transports})
 
 
 class TableView(UserPassesTestMixin, ListView):

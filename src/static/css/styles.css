@@ -13,6 +13,7 @@
     --secondary-purple-light: #BDB5DA;
     --secondary-gray: #484D52;
     --secondary-gray-light: #DAE0E3;
+
 }
 
 #calendar {
@@ -289,6 +290,41 @@ a.logout_pic {
 .table {
     transition: opacity 0.1s;
 }
+/*DAY PART*/
+.days_background{
+    color: white;
+    width:50%;
+    height: 100%;
+    font-size: 90%;
+}
+.day_left_part{ /*tuto to riesis !*/
+    text-align: left;  
+    
+    padding: 0.7em;
+}
+.gate{
+    /*background-color: red;*/
+    text-align: center;
+    font-size: 270%;
+    padding: 0.15em;
+}
+.transport_row{
+    transition: opacity 0.2s;
+    cursor: pointer;
+    opacity: 0.6;
+}
+.transport_row.active, .transport_row:hover{
+    opacity: 1;
+}
+
+
+/*
+.prava_cast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 100%;
+}*/
 
 .loading-svg {
     top: 250px;
