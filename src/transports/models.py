@@ -72,7 +72,8 @@ class Transport(models.Model):
             "Preprava EČV " + self.registration_number + " od " + start + " do " + end
         )
 
-    def _format_datetime(self, _datetime):
+    @staticmethod
+    def _format_datetime(_datetime):
         """
         Utility function to format datetime.
         """
@@ -108,15 +109,39 @@ class Transport(models.Model):
             )
 
 
-def get_model_choices_cache_key(model):
-    return model.__name__ + "_choices"
+class CachedModel(models.Model):
+    class Meta:
+        abstract = True
 
+    @classmethod
+    def fetch_instances(cls):
+        """
+        Fetch all model's instances from cache, or set to cache if not available.
+        """
+        return cache.get_or_set(
+            cls.get_model_instances_cache_key(cls),
+            {transport.id: transport for transport in cls.objects.all()},
+            600
+        )
 
-def invalidate_form_cache(cls):
-    return cache.delete(get_model_choices_cache_key(cls))
+    @classmethod
+    def invalidate_cache(cls):
+        cache.delete(cls.get_model_choices_cache_key(cls))
+        cache.delete(cls.get_model_instances_cache_key(cls))
 
+    @staticmethod
+    def get_model_choices_cache_key(model):
+        return model.__name__ + "_choices"
 
-class Gate(models.Model):
+    @staticmethod
+    def get_model_instances_cache_key(model):
+        return model.__name__ + "_instances"
+
+    def save(self, *args, **kwargs):
+        self.invalidate_cache()
+        super().save(*args, **kwargs)
+
+class Gate(CachedModel):
     name = models.CharField("Názov", max_length=20)
 
     class Meta:
@@ -126,12 +151,8 @@ class Gate(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        invalidate_form_cache(self.__class__)
-        super().save(*args, **kwargs)
 
-
-class Supplier(models.Model):
+class Supplier(CachedModel):
     name = models.CharField("Názov", max_length=100)
 
     class Meta:
@@ -141,12 +162,8 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        invalidate_form_cache(self.__class__)
-        super().save(*args, **kwargs)
 
-
-class Carrier(models.Model):
+class Carrier(CachedModel):
     name = models.CharField("Názov", max_length=100)
 
     class Meta:
@@ -156,12 +173,8 @@ class Carrier(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        invalidate_form_cache(self.__class__)
-        super().save(*args, **kwargs)
 
-
-class TransportPriority(models.Model):
+class TransportPriority(CachedModel):
     name = models.CharField("Názov", max_length=50)
     color = models.CharField("Farba", max_length=20)
     font_color = models.CharField("Farba textu", max_length=20, default="#000000")
@@ -176,12 +189,9 @@ class TransportPriority(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        invalidate_form_cache(self.__class__)
-        super().save(*args, **kwargs)
 
 
-class TransportStatus(models.Model):
+class TransportStatus(CachedModel):
     name = models.CharField("Názov", max_length=30)
     color = models.CharField("Farba", max_length=20)
     font_color = models.CharField("Farba textu", max_length=20, default="#000000")
@@ -195,7 +205,3 @@ class TransportStatus(models.Model):
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        invalidate_form_cache(self.__class__)
-        super().save(*args, **kwargs)
