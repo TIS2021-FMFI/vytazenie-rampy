@@ -256,8 +256,8 @@ a.logout_pic {
     filter: brightness(90.1%) sepia(100%) saturate(1000%) hue-rotate(-25deg);
 }
 /* detail extended changes */
-#show-changes { 
-    display: none; 
+#show-changes {
+    display: none;
 }
 
 /* FORM SELECT */
@@ -301,6 +301,7 @@ a.logout_pic {
 }
 .loading-svg-wrapper > .loading-svg {
     opacity: 0;
+    display: none;
 }
 .loading-svg-wrapper.htmx-request {
     display: block;
@@ -308,4 +309,9 @@ a.logout_pic {
 }
 .loading-svg-wrapper.htmx-request > .loading-svg {
     opacity: 1;
+    display: block;
+}
+.change-info {
+    font-size: 0.8em;
+    color: var(--secondary-gray);
 }

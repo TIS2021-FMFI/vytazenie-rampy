@@ -1,4 +1,3 @@
-{% if request.user.is_superuser %}
+{% if request.user.is_superuser and text %}
     <i class="fas fa-exchange-alt" data-tippy-content="{{text}}"></i>
-    {% comment %} TODO: zmenit Test test na poslednu zmenu daneho pola {% endcomment %}
 {% endif %}

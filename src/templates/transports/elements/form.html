@@ -185,26 +185,30 @@
                     {% endif %}
                     <button type="submit" class="btn btn-success">Uložiť zmeny</button>
                 </div>
-
-                <div id="show-changes"> 
-                    {% if request.user.is_superuser %}
-                        {% for change in changes_parsed %}
-                            <li>
-                                <small><i>{{change.date}}</i></small> by {{change.user}}
-                                {% for item in change.changes %}
-                                    <br> {{item}}
-                                {% endfor %}
-                                
-                            </li>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
             </div>
         </div>
+        {% if request.user.is_superuser %}
+        <div class="row">
+            <div class="col">
+                <div id="show-changes">
+                    <hr>
+                    <ul>
+                        {% for change in changes_parsed %}
+                            <li class="mb-3">
+                                <small><i>{{change.date}}</i></small> - <strong>Preprava bola upravená používateľom {{change.user}}.</strong>
+                                    {% for item in change.changes %}
+                                        <div class="change-info">
+                                            {{item}}
+                                        </div>
+                                    {% endfor %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </form>
-
-    {% comment %} TODO: zobrazit zmeny na preprave - zmeny na preprave su dostupne cez premennu {{ changes }}{% endcomment %}
 
     <script>
         function prefixZero(num) {
@@ -318,8 +322,8 @@
                 tippy('[data-tippy-content]');
             {% endif %}
         });
-        $("#btn-toggle-show-changes").click(function (e) { 
-            $("#show-changes").toggle(); 
+        $("#btn-toggle-show-changes").click(function (e) {
+            $("#show-changes").toggle();
         });
     </script>
 </div>
