@@ -2,8 +2,8 @@ import json
 import pathlib
 import csv
 import logging
-
 from collections import OrderedDict
+from dateutil import parser
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -88,7 +88,7 @@ def form(request, pk=None):
             })
         context["changes_parsed"] = changes_parsed
 
-        latest_changes = create_latest_changes(changes)
+        latest_changes = _create_latest_changes(changes)
         context["latest_changes"] = latest_changes
 
     return render(request, "transports/elements/form.html", context)
@@ -97,11 +97,18 @@ def _parse_transport_modification_changes(changes):
     changes_str = []
     for field in changes:
         field_name = Transport._meta.get_field(field).verbose_name
-        changes_str.append(f'{field_name}: {changes[field]["BEFORE"]} -> {changes[field]["AFTER"]}')
+        changes_str.append(f'{field_name}: {_format_change_value(changes[field]["BEFORE"])} -> {_format_change_value(changes[field]["AFTER"])}')
     return changes_str
 
-def create_latest_changes(changes):
-    #array = changes["changes"]
+def _format_change_value(value):
+    try:
+        return Transport._format_datetime(parser.parse(value))
+    except:
+        if isinstance(value, bool):
+            return 'áno' if value else 'nie'
+        return value
+
+def _create_latest_changes(changes):
     my_dict = {
         "process_start": None,
         "process_finish": None,
@@ -137,15 +144,16 @@ def create_latest_changes(changes):
             else:
                 before = changes_dict[field]["BEFORE"]
                 after = changes_dict[field]["AFTER"]
-            
-            my_dict[x] = f'{str(change.user)}: {before} -> {after}'
+
+            my_dict[x] = f'{str(change.user)}: {_format_change_value(before)} -> {_format_change_value(after)}'
             if all([x is not None for x in my_dict.values()]):
                 return my_dict
-                
+
     return my_dict
 
 @user_passes_test(
     lambda user: user.is_superuser
+    or user.has_perm('accounts.weekly_view')
     or user.groups.first().custom_group.allowed_views.filter(view="week").exists(),
     None,
     "",
@@ -160,6 +168,7 @@ def week(request):
 
 @user_passes_test(
     lambda user: user.is_superuser
+    or user.has_perm('accounts.daily_view')
     or user.groups.first().custom_group.allowed_views.filter(view="day").exists(),
     None,
     "",
