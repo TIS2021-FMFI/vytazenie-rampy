@@ -45,7 +45,6 @@
                     {% endif %}
                 </div>
             </div>
-            <!-- funguje-->
             {% if request.user.is_superuser %}
                 <a href="{% url 'admin:index' %}" class="clickable_text_inside">
                     Administrácia
@@ -65,7 +64,16 @@
     $('#add-transport').click(() => {
         // when transport detail is put into modal, show it
         document.addEventListener('htmx:beforeRequest', (e) => {
+            window.dropdownParent = null;
+            window.modalActive = true;
+
             document.querySelector('#transport-detail').innerHTML = '';
+
+            // hide existing form if in daily view
+            if (document.querySelector('#transport-detail-aside')) {
+                document.querySelector('#transport-detail-aside').innerHTML = '';
+            }
+
             window.modal.show()
         }, {once: true});
     });

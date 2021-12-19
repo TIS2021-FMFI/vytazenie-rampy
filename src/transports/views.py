@@ -189,8 +189,13 @@ def week(request):
     "",
 )
 def day(request):
-    transports = Transport.find_objects_between_timestamps(datetime.today().replace(hour=0, minute=0, second=0), datetime.today().replace(hour=23, minute=59, second=59))
-    return render(request, "transports/day.html", {"title_appendix": "Denný pohľad", "transports": transports})
+    transports = Transport.find_objects_between_timestamps(datetime.today().replace(hour=0, minute=0, second=0), datetime.today().replace(hour=23, minute=59, second=59)).select_related('gate', 'supplier', 'carrier', 'transport_priority', 'transport_status').order_by('process_start').filter(canceled=False)
+
+    active_transport_id = None
+    if request.GET.get('active_transport_id'):
+        active_transport_id = int(request.GET.get('active_transport_id'))
+
+    return render(request, "transports/elements/day/content.html" if request.htmx else "transports/day.html", {"title_appendix": "Denný pohľad", "transports": transports, "active_transport_id": active_transport_id})
 
 
 class TableView(UserPassesTestMixin, ListView):

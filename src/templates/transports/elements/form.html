@@ -245,7 +245,7 @@
 
             // initialize select inputs
             $('select.form-select').select2({
-                dropdownParent: $('#modal'),
+                dropdownParent: window.dropdownParent !== undefined && window.dropdownParent !== null ? window.dropdownParent : $('#modal'),
                 width: "100%",
                 tags: true,
                 createTag: function (params) {
@@ -319,7 +319,7 @@
 
             // send event to refetch events on calendar and close modal
             {% if not form.errors and saved %}
-                document.dispatchEvent(new Event('transportSaved', {"bubbles":true, "cancelable":false}));
+                document.dispatchEvent(new CustomEvent('transportSaved', {"bubbles":true, "cancelable":false, "detail": {transport_id: {{ form.instance.pk }} }}));
             {% endif %}
 
             // display tooltips

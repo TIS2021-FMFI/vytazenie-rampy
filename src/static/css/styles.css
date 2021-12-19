@@ -295,12 +295,10 @@ a.logout_pic {
     color: white;
     width:50%;
     height: 100%;
-    font-size: 90%;
 }
 .day_left_part{ /*tuto to riesis !*/
     text-align: left;
-
-    padding: 0.7em;
+    padding: 0.5em;
 }
 .gate{
     /*background-color: red;*/
@@ -308,12 +306,14 @@ a.logout_pic {
     font-size: 270%;
     padding: 0.15em;
 }
-.transport_row{
+.transport-row {
     transition: opacity 0.2s;
     cursor: pointer;
-    opacity: 0.6;
+    color: white;
+    padding: 1em;
+    opacity: 0.4;
 }
-.transport_row.active, .transport_row:hover{
+.transport-row.active, .transport-row:hover{
     opacity: 1;
 }
 
@@ -379,7 +379,43 @@ a.logout_pic {
     margin-top: 3px;
 }
 
-#week_day_text {
+#week_day_text.calendar {
     min-width: 220px;
     text-align:center;
+}
+#transport-detail-aside {
+    height: calc(100vh - 100px);
+    border-left: solid 1px var(--secondary-gray-light);
+    position: sticky;
+    top: 0;
+}
+.loading-svg-wrapper.daily-view img {
+    top: 400px;
+    right: 21.65%;
+    left: initial;
+    bottom: initial;
+}
+
+.loading-svg-wrapper.htmx-request.daily-view {
+    display: block;
+    height: 0px;
+}
+
+.btn-info {
+    color: white;
+    background-color: var(--secondary-blue);
+    border-color: var(--secondary-blue);
+}
+
+.btn-info:hover {
+    color: white;
+    background-color: var(--main-blue);
+    border-color: var(--main-blue);
+}
+
+.btn-info:focus {
+    color: white;
+    background-color: var(--main-blue);
+    border-color: var(--main-blue);
+    box-shadow: 0 0 0 .25rem rgba(12, 26, 88, 0.5);
 }
