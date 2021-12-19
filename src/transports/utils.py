@@ -69,7 +69,7 @@ class TransportChangeTracker:
         Get instance's field value. Related fields (FK, M2M) return name of the related
         model instance.
         """
-        if 'id' not in field:
+        if "id" not in field:
             return getattr(instance, field)
 
         related_model = getattr(Transport, field).descriptor.field.related_model

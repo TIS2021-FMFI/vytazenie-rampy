@@ -34,9 +34,9 @@ class DefaultBootstrapForm(forms.ModelForm):
 
         for field in self.fields:
             try:
-                self.fields[field].widget.attrs = dict(default_attrs[
-                    self.fields[field].widget.__class__
-                ])
+                self.fields[field].widget.attrs = dict(
+                    default_attrs[self.fields[field].widget.__class__]
+                )
             except KeyError:
                 self.fields[field].widget.attrs = {"class": "form-control"}
 
@@ -57,13 +57,15 @@ class TransportForm(DefaultBootstrapForm):
 
     def __init__(self, user, *args, **kwargs):
         super(TransportForm, self).__init__(*args, **kwargs)
-        
+
         editable_fields = ()
         for field in self.fields:
             if user.has_perm(f"transports.edit_detailfield_{field}"):
                 editable_fields += (field,)
 
-        self.readonly_fields = tuple(field for field in self.fields if field not in editable_fields)
+        self.readonly_fields = tuple(
+            field for field in self.fields if field not in editable_fields
+        )
 
         # ! in case of an emergency use the below code instead
         # self.readonly_fields = ()
@@ -101,7 +103,7 @@ class TransportForm(DefaultBootstrapForm):
             self.MODEL_CHOICES_CACHE_DURATION,
         )
         return choices
-        
+
     def apply_restrictions(self):
         for field in self.readonly_fields:
             self.fields[field].required = False

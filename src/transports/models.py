@@ -121,7 +121,7 @@ class CachedModel(models.Model):
         return cache.get_or_set(
             cls.get_model_instances_cache_key(cls),
             {transport.id: transport for transport in cls.objects.all()},
-            600
+            600,
         )
 
     @classmethod
@@ -140,6 +140,7 @@ class CachedModel(models.Model):
     def save(self, *args, **kwargs):
         self.invalidate_cache()
         super().save(*args, **kwargs)
+
 
 class Gate(CachedModel):
     name = models.CharField("Názov", max_length=20)
@@ -188,7 +189,6 @@ class TransportPriority(CachedModel):
 
     def __str__(self):
         return self.name
-
 
 
 class TransportStatus(CachedModel):
