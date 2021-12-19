@@ -1,1 +1,48 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="days_background" >
+    <table style="width:100%">
+    {% for i in transports %}
+
+            <tr class = "transport_row" style = "background-color: {{i.color}};">
+                        <td width = "70px" id="myDiv"   class = "day_left_part" ><strong>{{ i.registration_number }}</strong></td>
+                        <td width = "80px" class = "day_left_part"><span  class = "event-ribbon" style = "background-color: {{i.transport_prority.color}}; color:{{i.transport_priority.font_color}};"> {{ i.transport_priority }} </span></td>
+                        <td width = "80px" class = "day_left_part"><span class = "event-ribbon"  style = "background-color: {{i.transport_status.color}}; color:{{i.transport_status.font_color}};"> {{ i.transport_status }} </span></td>
+                        <td width = "150px" class = "day_left_part" colspan="3">
+                            {% if i.load == True and i.unload == False %} 
+                                Nakládka 
+                            {% elif i.load == True and i.unload == True%} 
+                                Nakládka aj vykládka
+                            {%else%} 
+                                Vykládka
+                            {% endif %}</td>
+                        
+                        <td width = "150px" class = "day_left_part"  colspan="3"><span >{{ i.process_start|date:"d. m H:i"}} - {{ i.process_finish|date:"d. m H:i"}}</span></td>
+
+                    <td class = "day_left_part" rowspan="2">
+                        <div class = "gate">
+                            <strong>{{ i.gate}}</strong>
+                        </div>
+                    </td>
+            </tr>
+            <tr class = "transport_row" style = "background-color: {{i.color}};">
+                <td class = "day_left_part"  colspan="3">Dodávateľ: {{ i.supplier }}</td>
+                <td class = "day_left_part" colspan="3">Dopravca: {{i.carrier}}</td>
+                <td  class = "day_left_part" colspan="3">Šofér: {{ i.driver_name }}</td>       
+            </tr>
+
+    
+    {% endfor %}
+    </table>
+
+</div> 
+
+
+
+
+
+
+{% endblock %}
+
