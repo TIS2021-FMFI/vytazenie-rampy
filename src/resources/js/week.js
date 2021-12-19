@@ -113,8 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
         },
         eventClick: function (eventClickInfo) { // when user clicks on event, show modal with transport detail
-            if (!perms.calendar_editable) return;
-
             document.querySelector('#transport-detail').innerHTML = '';
             var transportId = eventClickInfo.event.extendedProps.transport_id;
 
