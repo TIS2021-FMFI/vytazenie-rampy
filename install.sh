@@ -88,9 +88,20 @@ python src/manage.py makemigrations
 python src/manage.py migrate
 
 echo "*********************************"
+
+echo "7. Import základnej konfigurácie"
+python src/manage.py loaddata import/gate.json
+python src/manage.py loaddata import/transportstatus.json
+python src/manage.py loaddata import/transportpriority.json
+python src/manage.py loaddata import/views.json
+python src/manage.py loaddata import/permissions.json
+python src/manage.py loaddata import/groups.json
+python src/manage.py loaddata import/customgroups.json
+
+echo "*********************************"
 echo "*Projekt uspesne inicializovany!*"
 echo "*********************************"
 
-echo "7. Spustenie vyvojarskeho serveru"
+echo "8. Spustenie vyvojarskeho serveru"
 python src/manage.py runserver
 

@@ -2,6 +2,8 @@ import json
 import pathlib
 import csv
 import logging
+import copy
+
 from collections import OrderedDict
 from dateutil import parser
 from datetime import datetime
@@ -36,14 +38,16 @@ def form(request, pk=None):
     """
     _form = None
     saved = False
+    _initial = _get_default_transport_data()
 
     try:
-        inst = Transport.objects.get(pk=pk)
+        inst = Transport.objects.select_related('supplier', 'carrier', 'transport_priority', 'transport_status', 'gate').get(pk=pk)
     except Transport.DoesNotExist:
-        inst = None
+        _initial = {k + '_id':v for k,v in _initial.items()}
+        inst = Transport(**_initial)
 
     if request.method == "POST":
-        tracker = TransportChangeTracker(request.POST, inst, request.user)
+        tracker = TransportChangeTracker(copy.deepcopy(request.POST), inst, request.user, True)
 
         if tracker.is_valid():
             saved = True
@@ -62,9 +66,7 @@ def form(request, pk=None):
 
     # get instance if primary key is provided
     if _form is None:
-        _form = TransportForm(
-            instance=inst, initial=_get_default_transport_data() if pk is None else {}
-        )
+        _form = TransportForm(request.user, instance=inst, initial=_get_default_transport_data() if pk is None else {})  
 
     context = {"form": _form, "saved": saved}
 

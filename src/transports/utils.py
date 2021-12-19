@@ -17,16 +17,17 @@ class TransportChangeTracker:
     save_instance = True
 
     def __init__(self, data, instance, user, partial=False):
-        if partial and instance is not None:
+        if partial:
             # enable partial instance update by injecting original instance data
             # to validated data dictionary
             instance_dict = model_to_dict(instance)
             for field in instance_dict:
-                if field not in data:
+                if field not in data or data[field] is None:
                     data[field] = instance_dict[field]
 
         self.instance = instance
-        self.form = TransportForm(data, instance=instance)
+        self.form = TransportForm(user, data, instance=instance)
+        self.form.apply_restrictions()
         self.user = user
 
     def get_form(self):
@@ -49,9 +50,7 @@ class TransportChangeTracker:
             # track changes from form values
             changes = {}
             for field, value in self.obj.tracker.changed().items():
-                if value != getattr(self.obj, field):
-                    before, after = self._get_value(self.obj, field, value), self._get_value(self.obj, field)
-                    changes[field] = {"BEFORE": before, "AFTER": after}
+                changes[field] = {"BEFORE": value, "AFTER": getattr(self.obj, field)}
 
             if self.save_instance:
                 self.obj.save()
