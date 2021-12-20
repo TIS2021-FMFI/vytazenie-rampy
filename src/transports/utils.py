@@ -53,7 +53,9 @@ class TransportChangeTracker:
             changes = {}
             for field, value in self.obj.tracker.changed().items():
                 if value != getattr(self.obj, field):
-                    before, after = self._get_value(self.obj, field, value), self._get_value(self.obj, field)
+                    before, after = self._get_value(
+                        self.obj, field, value
+                    ), self._get_value(self.obj, field)
                     changes[field] = {"BEFORE": before, "AFTER": after}
 
             if self.save_instance:
@@ -74,13 +76,19 @@ class TransportChangeTracker:
         model instance.
         """
         if "id" not in field:
-            return override_value if override_value is not None else getattr(instance, field)
+            return (
+                override_value
+                if override_value is not None
+                else getattr(instance, field)
+            )
 
         related_model = getattr(Transport, field).descriptor.field.related_model
         instances = related_model.fetch_instances()
 
         # if we don't want to access actual value in instance, but use the
         # provided one
-        instance_id = override_value if override_value is not None else getattr(instance, field)
+        instance_id = (
+            override_value if override_value is not None else getattr(instance, field)
+        )
 
         return instances.get(instance_id, instance_id)
