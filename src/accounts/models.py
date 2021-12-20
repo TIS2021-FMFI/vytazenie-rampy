@@ -20,7 +20,6 @@ class CustomUser(AbstractUser):
     username = models.CharField(
         _("username"),
         max_length=150,
-        unique=True,
         help_text=_("Vyplňuje sa automaticky pri zadaní krstného mena a priezviska."),
         validators=[username_validator],
         error_messages={
