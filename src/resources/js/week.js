@@ -19,11 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         validRange: function (nowDate) {
             if (perms.calendar_history) return {};
-            nowDate.setHours(0);
             var d = new Date(nowDate.getTime());
-            d.setHours(23);
-            d.setMinutes(59);
-            d.setDate(d.getDate() - 1);
+            d.setHours(0);
+            d.setMinutes(0);
 
             return {
                 start: d
