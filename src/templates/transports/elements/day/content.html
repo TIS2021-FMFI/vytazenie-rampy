@@ -5,7 +5,7 @@
             <div class="transport-row py-3 px-5 {% if forloop.counter == 1 and not active_transport_id or active_transport_id == transport.pk %}active{% else %}inactive{% endif %}" style="background-color: {{ transport.color }};" data-transport-id="{{ transport.pk }}" hx-get="{% url 'form-creation' %}{{ transport.pk }}" hx-target="#transport-detail-aside" hx-swap="innerHTML" hx-indicator=".loading-svg-wrapper">
                 <div class="row pb-2">
                     <div class="col-4">
-                        <strong class="fs-3">{{ transport.gate }}</strong>
+                        <strong class="fs-3">{% if transport.gate %}{{ transport.gate }}{% else %}Nezadaná brána{% endif %}</strong>
                     </div>
                     <div class="col-8 text-end pt-2">
                         <span class="event-ribbon me-2" style="background-color: {{ transport.transport_priority.color }}; color:{{ transport.transport_priority.font_color }};">
@@ -72,6 +72,9 @@
             $('.transport-row.active').removeClass('active');
             var targetTransportRow = $(e.target).closest('.transport-row');
             targetTransportRow.addClass('active');
+
+            var url = {% url 'day' %} + '?active_transport_id=' + targetTransportRow.data('transport-id');
+            window.history.pushState("", "", url);
         });
 
         fetchActiveTransportForm();
