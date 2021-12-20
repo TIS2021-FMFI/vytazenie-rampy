@@ -18,16 +18,17 @@ class TransportChangeTracker:
     save_instance = True
 
     def __init__(self, data, instance, user, partial=False):
-        if partial and instance is not None:
+        if partial:
             # enable partial instance update by injecting original instance data
             # to validated data dictionary
             instance_dict = model_to_dict(instance)
             for field in instance_dict:
-                if field not in data:
+                if field not in data or data[field] is None:
                     data[field] = instance_dict[field]
 
         self.instance = instance
-        self.form = TransportForm(data, instance=instance)
+        self.form = TransportForm(user, data, instance=instance)
+        self.form.apply_restrictions()
         self.user = user
 
     def get_form(self):
@@ -72,7 +73,7 @@ class TransportChangeTracker:
         Get instance's field value. Related fields (FK, M2M) return name of the related
         model instance.
         """
-        if 'id' not in field:
+        if "id" not in field:
             return getattr(instance, field)
 
         related_model = getattr(Transport, field).descriptor.field.related_model

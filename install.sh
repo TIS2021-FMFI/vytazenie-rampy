@@ -88,9 +88,31 @@ python src/manage.py makemigrations
 python src/manage.py migrate
 
 echo "*********************************"
+echo "7. Import základnej konfigurácie"
+echo "Importovať základnú konfiguráciu? [N/y]:"
+read conf
+
+if [[ "$conf" == 'y' || "$conf" == 'Y' ]]
+then
+    python src/manage.py loaddata import/gate.json
+    python src/manage.py loaddata import/transportstatus.json
+    python src/manage.py loaddata import/transportpriority.json
+    python src/manage.py loaddata import/views.json
+    python src/manage.py loaddata import/permissions.json
+    python src/manage.py loaddata import/groups.json
+    python src/manage.py loaddata import/customgroups.json
+fi
+
+echo "*********************************"
 echo "*Projekt uspesne inicializovany!*"
 echo "*********************************"
 
-echo "7. Spustenie vyvojarskeho serveru"
-python src/manage.py runserver
+echo "8. Spustenie vyvojarskeho serveru"
+echo "Spustiť vývojársky server? [N/y]:"
+read runserver
+
+if [[ "$runserver" == 'y' || "$runserver" == 'Y' ]]
+then
+    python src/manage.py runserver
+fi
 
