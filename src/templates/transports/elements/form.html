@@ -134,6 +134,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
+                                <input type='hidden' value='False' name='{{ form.load.name }}'>
                                 {{ form.load }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.load.id_for_label }}">Nakládka</label>
@@ -148,6 +149,7 @@
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
+                                <input type='hidden' value='False' name='{{ form.unload.name }}'>
                                 {{ form.unload }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.unload.id_for_label }}">Vykládka</label>
@@ -164,6 +166,7 @@
                 </div>
                 <div class="col">
                     <div class="form-check form-switch">
+                        <input type='hidden' value='False' name='{{ form.canceled.name }}'>
                         {{ form.canceled }}
                         <div class="d-flex justify-content-between">
                             <label class="form-check-label" for="{{ form.canceled.id_for_label }}">Zrušená</label>
@@ -195,7 +198,7 @@
                     <ul>
                         {% for change in changes_parsed %}
                             <li class="mb-3">
-                                <small><i>{{change.date}}</i></small> - <strong>Preprava bola upravená používateľom {{change.user}}.</strong>
+                                <small><i>{{change.date}}</i></small> - <strong>Preprava bola {% if forloop.counter == 1 %}vytvorená{% else %}upravená{% endif %} používateľom {{change.user}}.</strong>
                                     {% for item in change.changes %}
                                         <div class="change-info">
                                             {{item}}
