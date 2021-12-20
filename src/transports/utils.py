@@ -50,7 +50,9 @@ class TransportChangeTracker:
             # track changes from form values
             changes = {}
             for field, value in self.obj.tracker.changed().items():
-                changes[field] = {"BEFORE": value, "AFTER": getattr(self.obj, field)}
+                if value != getattr(self.obj, field):
+                    before, after = self._get_value(self.obj, field, value), self._get_value(self.obj, field)
+                    changes[field] = {"BEFORE": before, "AFTER": after}
 
             if self.save_instance:
                 self.obj.save()
