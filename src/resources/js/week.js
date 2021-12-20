@@ -1,6 +1,9 @@
 import {getCookie, showLoader, hideLoader} from './main';
 
 document.addEventListener('DOMContentLoaded', function () {
+    //custom styling for week view
+    document.getElementById('week_day_text').classList.add('calendar');
+
     // used for time where the calendar is initially scrolled at
     var date = new Date();
     date.setHours(date.getHours() - 1);
@@ -16,11 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         validRange: function (nowDate) {
             if (perms.calendar_history) return {};
-            nowDate.setHours(0);
             var d = new Date(nowDate.getTime());
-            d.setHours(23);
-            d.setMinutes(59);
-            d.setDate(d.getDate() - 1);
+            d.setHours(0);
+            d.setMinutes(0);
 
             return {
                 start: d

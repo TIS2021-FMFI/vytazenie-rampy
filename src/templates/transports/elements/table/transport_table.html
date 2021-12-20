@@ -71,8 +71,6 @@
 
         var queryParams = {{ params|safe }};
 
-        // get page query param out of url
-        delete queryParams.page;
         var url = {% url 'table' %} + '?' + $.param(queryParams);
         window.history.pushState("", "", url);
 

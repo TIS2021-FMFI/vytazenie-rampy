@@ -1,0 +1,105 @@
+{% load static %}
+<div class="row">
+    <div class="col px-0">
+        {% for transport in transports %}
+            <div class="transport-row py-3 px-5 {% if forloop.counter == 1 and not active_transport_id or active_transport_id == transport.pk %}active{% else %}inactive{% endif %}" style="background-color: {{ transport.color }};" data-transport-id="{{ transport.pk }}" hx-get="{% url 'form-creation' %}{{ transport.pk }}" hx-target="#transport-detail-aside" hx-swap="innerHTML" hx-indicator=".loading-svg-wrapper">
+                <div class="row pb-2">
+                    <div class="col-4">
+                        <strong class="fs-3">{% if transport.gate %}{{ transport.gate }}{% else %}Nezadaná brána{% endif %}</strong>
+                    </div>
+                    <div class="col-8 text-end pt-2">
+                        <span class="event-ribbon me-2" style="background-color: {{ transport.transport_priority.color }}; color:{{ transport.transport_priority.font_color }};">
+                            {{ transport.transport_priority }}
+                        </span>
+                        <span class="event-ribbon" style="background-color: {{ transport.transport_status.color }}; color:{{ transport.transport_status.font_color }};">
+                            {{ transport.transport_status }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row pb-2">
+                    <div class="col">
+                        EVČ: <strong>{{ transport.registration_number }}</strong>
+                    </div>
+                    <div class="col">
+                        {% if transport.load == True and transport.unload == False %}Nákladka{% elif transport.load == True and transport.unload == True %} Nákladka aj vykládka{% else %} Vykládka {% endif %}
+                    </div>
+                    <div class="col">
+                        <span>{{ transport.process_start|date:"d. m H:i" }} - {{ transport.process_finish|date:"d. m H:i" }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Dodávateľ: <strong>{{ transport.supplier }}</strong>
+                    </div>
+                    <div class="col">
+                        Dopravca: <strong>{{transport.carrier }}</strong>
+                    </div>
+                    <div class="col">
+                        Šofér: <strong>{{ transport.driver_name }}</strong>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col px-0">
+        <div id="transport-detail-aside" class="p-4 daily-view">
+        </div>
+        <div class="loading-svg-wrapper daily-view">
+            <img src="{% static 'images/bars.svg' %}" alt="loading gif" class="loading-svg">
+        </div>
+    </div>
+</div>
+<script>
+    function fetchActiveTransportForm() {
+        var activeTransport = $('.transport-row.active').first();
+        htmx.ajax('GET', "{% url 'form-creation' %}" + activeTransport.data("transport-id"), {
+            target: '#transport-detail-aside',
+            swap: 'innerHTML',
+            source: '.loading-svg-wrapper'
+        });
+    }
+
+    $(function () {
+        if (!window.modalActive) {
+            window.dropdownParent = $("#transport-detail-aside");
+        }
+
+        $('.transport-row').click(function (e) {
+            if ($(e.target).hasClass('active')) {
+                return;
+            }
+
+            $('.transport-row.active').removeClass('active');
+            var targetTransportRow = $(e.target).closest('.transport-row');
+            targetTransportRow.addClass('active');
+
+            var url = {% url 'day' %} + '?active_transport_id=' + targetTransportRow.data('transport-id');
+            window.history.pushState("", "", url);
+        });
+
+        fetchActiveTransportForm();
+    });
+
+    {% if active_transport_id %}
+        fetchActiveTransportForm();
+    {% endif %}
+
+    document.addEventListener('htmx:beforeRequest', function () {
+        document.querySelector("#daily-view").style.opacity = 0.4;
+    });
+
+    document.addEventListener('htmx:afterSettle', function () {
+        document.querySelector("#daily-view").style.opacity = 1;
+    });
+
+    document.addEventListener('transportSaved', function (e) {
+        document.querySelector('#transport-detail').innerHTML = '';
+        window.dropdownParent = $("#transport-detail-aside");
+        window.modalActive = false;
+
+        htmx.ajax('GET', "{% url 'day' %}" + '?active_transport_id=' + e.detail.transport_id, {
+            target: '#daily-view',
+            swap: 'innerHTML'
+        });
+    });
+</script>

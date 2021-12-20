@@ -152,6 +152,10 @@ class Gate(CachedModel):
     def __str__(self):
         return self.name
 
+    @property
+    def short_name(self):
+        return self.name[-1]
+
 
 class Supplier(CachedModel):
     name = models.CharField("Názov", max_length=100)

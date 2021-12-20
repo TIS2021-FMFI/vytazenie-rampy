@@ -134,6 +134,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
+                                <input type='hidden' value='False' name='{{ form.load.name }}'>
                                 {{ form.load }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.load.id_for_label }}">Nakládka</label>
@@ -148,6 +149,7 @@
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
+                                <input type='hidden' value='False' name='{{ form.unload.name }}'>
                                 {{ form.unload }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.unload.id_for_label }}">Vykládka</label>
@@ -164,6 +166,7 @@
                 </div>
                 <div class="col">
                     <div class="form-check form-switch">
+                        <input type='hidden' value='False' name='{{ form.canceled.name }}'>
                         {{ form.canceled }}
                         <div class="d-flex justify-content-between">
                             <label class="form-check-label" for="{{ form.canceled.id_for_label }}">Zrušená</label>
@@ -195,7 +198,7 @@
                     <ul>
                         {% for change in changes_parsed %}
                             <li class="mb-3">
-                                <small><i>{{change.date}}</i></small> - <strong>Preprava bola upravená používateľom {{change.user}}.</strong>
+                                <small><i>{{change.date}}</i></small> - <strong>Preprava bola {% if forloop.counter == 1 %}vytvorená{% else %}upravená{% endif %} používateľom {{change.user}}.</strong>
                                     {% for item in change.changes %}
                                         <div class="change-info">
                                             {{item}}
@@ -226,6 +229,7 @@
             $('#{{ form.process_start.id_for_label }}').datetimepicker({
                 lazyInit: false,
                 format:'d.m.Y H:i:s',
+                dayOfWeekStart: 1,
                 onChangeDateTime: function (dp, input) {
                     input.val(formatDate(dp));
 
@@ -239,13 +243,16 @@
             $('#{{ form.process_finish.id_for_label }}').datetimepicker({
                 lazyInit: false,
                 format:'d.m.Y H:i:s',
+                dayOfWeekStart: 1
             });
 
+            // initialize select inputs
             $('select.form-select').select2({
-                dropdownParent: $('#modal'),
+                dropdownParent: window.dropdownParent !== undefined && window.dropdownParent !== null ? window.dropdownParent : $('#modal'),
                 width: "100%",
                 tags: true,
                 createTag: function (params) {
+                    // ability to create new model instances via select
                     var inputId = this.$element.attr('id');
                     var validInputIds = ['id_supplier', 'id_carrier'];
 
@@ -303,6 +310,7 @@
                 });
             });
 
+            // focus search field on select open
             $(document).on('select2:open', () => {
                 document.querySelector('.select2-search__field').focus();
             });
@@ -314,7 +322,7 @@
 
             // send event to refetch events on calendar and close modal
             {% if not form.errors and saved %}
-                document.dispatchEvent(new Event('transportSaved', {"bubbles":true, "cancelable":false}));
+                document.dispatchEvent(new CustomEvent('transportSaved', {"bubbles":true, "cancelable":false, "detail": {transport_id: {{ form.instance.pk }} }}));
             {% endif %}
 
             // display tooltips
@@ -322,6 +330,8 @@
                 tippy('[data-tippy-content]');
             {% endif %}
         });
+
+        // toggle changes div
         $("#btn-toggle-show-changes").click(function (e) {
             $("#show-changes").toggle();
         });

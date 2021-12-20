@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block content %}
+  <div id="color-helper">
+    <i class="fa fa-info"></i>
+  </div>
   <div id="calendar"></div>
 
   <script>
@@ -17,5 +20,12 @@
       calendar_history: {% if perms.accounts.calendar_history %}true{% else %}false{% endif %},
       calendar_editable: {% if perms.accounts.calendar_editable %}true{% else %}false{% endif %}
     };
+
+    document.addEventListener('DOMContentLoaded', function () {
+      tippy('#color-helper', {
+        content: '{% include 'transports/elements/week/color_helper.html' %}',
+        allowHTML: true,
+      });
+    });
   </script>
 {% endblock %}
