@@ -73,8 +73,7 @@ def form(request, pk=None):
     if _form is None:
         _form = TransportForm(
             request.user,
-            instance=inst,
-            initial=_get_default_transport_data() if pk is None else {},
+            instance=inst
         )
 
     context = {"form": _form, "saved": saved}
@@ -94,12 +93,12 @@ def form(request, pk=None):
             context.update(changes_cached)
         else:
             context['changes_parsed'] = []
-            for change in changes:
+            for index, change in enumerate(changes):
                 changes_dict = json.loads(change.changes)
                 context["changes_parsed"].append({
                     "date": change.created,
                     "user": str(change.user),
-                    "changes": _parse_transport_modification_changes(changes_dict)
+                    "changes": _parse_transport_modification_changes(changes_dict, index == 0)
                 })
 
             context["latest_changes"] = _create_latest_changes(changes)
@@ -108,12 +107,13 @@ def form(request, pk=None):
     return render(request, "transports/elements/form.html", context)
 
 
-def _parse_transport_modification_changes(changes):
+def _parse_transport_modification_changes(changes, creation_change=False):
     changes_str = []
     for field in changes:
         field_name = Transport._meta.get_field(field).verbose_name
+        before, after = _format_change_value(changes[field]["BEFORE"]), _format_change_value(changes[field]["AFTER"])
         changes_str.append(
-            f'{field_name}: {_format_change_value(changes[field]["BEFORE"])} -> {_format_change_value(changes[field]["AFTER"])}'
+            f'{field_name}: {before} -> {after}' if not creation_change else f'{field_name}: {after}'
         )
     return changes_str
 
@@ -124,6 +124,8 @@ def _format_change_value(value):
     except:
         if isinstance(value, bool):
             return "áno" if value else "nie"
+        if value is None:
+            return '-'
         return value
 
 
