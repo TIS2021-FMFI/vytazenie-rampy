@@ -2,6 +2,8 @@ import json
 import pathlib
 import csv
 import logging
+import copy
+
 from collections import OrderedDict
 from dateutil import parser
 from datetime import datetime
@@ -36,14 +38,20 @@ def form(request, pk=None):
     """
     _form = None
     saved = False
+    _initial = _get_default_transport_data()
 
     try:
-        inst = Transport.objects.get(pk=pk)
+        inst = Transport.objects.select_related(
+            "supplier", "carrier", "transport_priority", "transport_status", "gate"
+        ).get(pk=pk)
     except Transport.DoesNotExist:
-        inst = None
+        _initial = {k + "_id": v for k, v in _initial.items()}
+        inst = Transport(**_initial)
 
     if request.method == "POST":
-        tracker = TransportChangeTracker(request.POST, inst, request.user)
+        tracker = TransportChangeTracker(
+            copy.deepcopy(request.POST), inst, request.user, True
+        )
 
         if tracker.is_valid():
             saved = True
@@ -63,7 +71,9 @@ def form(request, pk=None):
     # get instance if primary key is provided
     if _form is None:
         _form = TransportForm(
-            instance=inst, initial=_get_default_transport_data() if pk is None else {}
+            request.user,
+            instance=inst,
+            initial=_get_default_transport_data() if pk is None else {},
         )
 
     context = {"form": _form, "saved": saved}
@@ -80,11 +90,13 @@ def form(request, pk=None):
         for change in changes:
             changes_dict = json.loads(change.changes)
 
-            changes_parsed.append({
-                "date": change.created,
-                "user": str(change.user),
-                "changes": _parse_transport_modification_changes(changes_dict)
-            })
+            changes_parsed.append(
+                {
+                    "date": change.created,
+                    "user": str(change.user),
+                    "changes": _parse_transport_modification_changes(changes_dict),
+                }
+            )
         context["changes_parsed"] = changes_parsed
 
         latest_changes = _create_latest_changes(changes)
@@ -92,20 +104,25 @@ def form(request, pk=None):
 
     return render(request, "transports/elements/form.html", context)
 
+
 def _parse_transport_modification_changes(changes):
     changes_str = []
     for field in changes:
         field_name = Transport._meta.get_field(field).verbose_name
-        changes_str.append(f'{field_name}: {_format_change_value(changes[field]["BEFORE"])} -> {_format_change_value(changes[field]["AFTER"])}')
+        changes_str.append(
+            f'{field_name}: {_format_change_value(changes[field]["BEFORE"])} -> {_format_change_value(changes[field]["AFTER"])}'
+        )
     return changes_str
+
 
 def _format_change_value(value):
     try:
         return Transport._format_datetime(parser.parse(value))
     except:
         if isinstance(value, bool):
-            return 'áno' if value else 'nie'
+            return "áno" if value else "nie"
         return value
+
 
 def _create_latest_changes(changes):
     my_dict = {
@@ -121,21 +138,21 @@ def _create_latest_changes(changes):
         "note": None,
         "load": None,
         "unload": None,
-        "canceled": None
+        "canceled": None,
     }
     for change in reversed(changes[1:]):
         changes_dict = json.loads(change.changes)
         for field in changes_dict:
             field_name = Transport._meta.get_field(field).verbose_name
-            #check if field is string
+            # check if field is string
             res = isinstance(field, str)
             if res:
-                x = field.replace("_id","")
+                x = field.replace("_id", "")
             else:
                 x = field
             if my_dict[x] != None:
                 continue
-            #check if before and after are strings
+            # check if before and after are strings
             res = isinstance(changes_dict[field]["BEFORE"], str)
             if res:
                 before = changes_dict[field]["BEFORE"].replace("_id", "")
@@ -144,15 +161,18 @@ def _create_latest_changes(changes):
                 before = changes_dict[field]["BEFORE"]
                 after = changes_dict[field]["AFTER"]
 
-            my_dict[x] = f'{str(change.user)}: {_format_change_value(before)} -> {_format_change_value(after)}'
+            my_dict[
+                x
+            ] = f"{str(change.user)}: {_format_change_value(before)} -> {_format_change_value(after)}"
             if all([x is not None for x in my_dict.values()]):
                 return my_dict
 
     return my_dict
 
+
 @user_passes_test(
     lambda user: user.is_superuser
-    or user.has_perm('accounts.weekly_view')
+    or user.has_perm("accounts.weekly_view")
     or user.groups.first().custom_group.allowed_views.filter(view="week").exists(),
     None,
     "",
@@ -167,14 +187,21 @@ def week(request):
 
 @user_passes_test(
     lambda user: user.is_superuser
-    or user.has_perm('accounts.daily_view')
+    or user.has_perm("accounts.daily_view")
     or user.groups.first().custom_group.allowed_views.filter(view="day").exists(),
     None,
     "",
 )
 def day(request):
-    transports = Transport.find_objects_between_timestamps(datetime.today().replace(hour=0, minute=0, second=0), datetime.today().replace(hour=23, minute=59, second=59))
-    return render(request, "transports/day.html", {"title_appendix": "Denný pohľad", "transports": transports})
+    transports = Transport.find_objects_between_timestamps(
+        datetime.today().replace(hour=0, minute=0, second=0),
+        datetime.today().replace(hour=23, minute=59, second=59),
+    )
+    return render(
+        request,
+        "transports/day.html",
+        {"title_appendix": "Denný pohľad", "transports": transports},
+    )
 
 
 class TableView(UserPassesTestMixin, ListView):
