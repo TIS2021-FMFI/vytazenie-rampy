@@ -3,7 +3,7 @@
         <div class="accordion open accordion-flush mt-4 shadow-sm" id="accordionFilter">
             <div class="accordion-item border">
                 {{ form.non_field_errors }}
-                <form method="get" id="table-filter" hx-boost="true" hx-target="#table" hx-swap="innerHTML" hx-indicator=".table">
+                <form method="get" id="table-filter" hx-get="{% url 'table' %}" hx-target="#table" hx-swap="innerHTML" hx-indicator=".table">
                     <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#flush-collapseOne" aria-expanded="false"
