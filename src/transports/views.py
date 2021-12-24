@@ -39,19 +39,18 @@ def form(request, pk=None):
     """
     _form = None
     saved = False
-    _initial = _get_default_transport_data()
 
     try:
         inst = Transport.objects.select_related(
             "supplier", "carrier", "transport_priority", "transport_status", "gate"
         ).get(pk=pk)
     except Transport.DoesNotExist:
-        _initial = {k + "_id": v for k, v in _initial.items()}
-        inst = Transport(**_initial)
+        # create new instance with initial data
+        inst = Transport(**_get_default_transport_data())
 
     if request.method == "POST":
         tracker = TransportChangeTracker(
-            copy.deepcopy(request.POST), inst, request.user, True
+            copy.deepcopy(request.POST), inst, request.user
         )
 
         if tracker.is_valid():
@@ -90,6 +89,8 @@ def form(request, pk=None):
             context.update(changes_cached)
         else:
             context["changes_parsed"] = []
+
+            # iterate through individual transport modifications (changes)
             for index, change in enumerate(changes):
                 changes_dict = json.loads(change.changes)
                 context["changes_parsed"].append(
@@ -102,6 +103,7 @@ def form(request, pk=None):
                     }
                 )
 
+            # latest changes display next to the form label
             context["latest_changes"] = _create_latest_changes(changes)
             cache.set(
                 cache_key,
@@ -115,21 +117,33 @@ def form(request, pk=None):
 
 
 def _parse_transport_modification_changes(changes, creation_change=False):
+    """
+    Parses changes on all fields into sentences, that get displayed on the frontend.
+    """
     changes_str = []
+
     for field in changes:
         field_name = Transport._meta.get_field(field).verbose_name
+
         before, after = _format_change_value(
             changes[field]["BEFORE"]
         ), _format_change_value(changes[field]["AFTER"])
+
+        # if this is the creation change (modification created on transport creation)
+        # do not display original value
         changes_str.append(
             f"{field_name}: {before} -> {after}"
             if not creation_change
             else f"{field_name}: {after}"
         )
+
     return changes_str
 
 
 def _format_change_value(value):
+    """
+    Format values in displayed changes.
+    """
     try:
         return Transport._format_datetime(parser.parse(value))
     except:
@@ -137,60 +151,47 @@ def _format_change_value(value):
             return "áno" if value else "nie"
         if value is None:
             return "-"
+
         return value
 
 
 def _create_latest_changes(changes):
-    my_dict = {
-        "process_start": None,
-        "process_finish": None,
-        "registration_number": None,
-        "driver_name": None,
-        "supplier": None,
-        "carrier": None,
-        "transport_priority": None,
-        "transport_status": None,
-        "gate": None,
-        "note": None,
-        "load": None,
-        "unload": None,
-        "canceled": None,
-    }
+    """
+    Get last change on individual Transport fields.
+    """
+    last_changes = { f.name: None for f in Transport._meta.fields if f.name != 'id' }
+
     for change in reversed(changes[1:]):
         changes_dict = json.loads(change.changes)
-        for field in changes_dict:
-            # check if field is string
-            res = isinstance(field, str)
-            if res:
-                x = field.replace("_id", "")
-            else:
-                x = field
 
-            if my_dict[x] is not None:
+        for field in changes_dict:
+            field_name = field
+
+            if isinstance(field, str):
+                field_name = field.replace("_id", "")
+
+            if last_changes[field_name] is not None:
                 continue
 
-            # check if before and after are strings
-            if isinstance(changes_dict[field]["BEFORE"], str):
-                before = changes_dict[field]["BEFORE"].replace("_id", "")
-                after = changes_dict[field]["AFTER"].replace("_id", "")
-            else:
-                before = changes_dict[field]["BEFORE"]
-                after = changes_dict[field]["AFTER"]
+            before = changes_dict[field]["BEFORE"]
+            after = changes_dict[field]["AFTER"]
 
-            my_dict[
-                x
+            last_changes[
+                field_name
             ] = f"{str(change.user)}: {_format_change_value(before)} -> {_format_change_value(after)}"
 
-            if all([x is not None for x in my_dict.values()]):
-                return my_dict
+            # if last changes are found for all fields, don't continue
+            if all([x is not None for x in last_changes.values()]):
+                return last_changes
 
-    return my_dict
+    return last_changes
 
 
 @user_passes_test(
-    lambda user: user.is_superuser
-    or user.has_perm("accounts.weekly_view")
-    or user.groups.first().custom_group.allowed_views.filter(view="week").exists(),
+    lambda user: user.is_authenticated
+        and (user.is_superuser
+        or user.has_perm("accounts.weekly_view")
+        or user.groups.first().custom_group.allowed_views.filter(view="week").exists()),
     None,
     "",
 )
@@ -213,13 +214,15 @@ def week(request):
 
 
 @user_passes_test(
-    lambda user: user.is_superuser
-    or user.has_perm("accounts.daily_view")
-    or user.groups.first().custom_group.allowed_views.filter(view="day").exists(),
+    lambda user: user.is_authenticated
+        and (user.is_superuser
+        or user.has_perm("accounts.daily_view")
+        or user.groups.first().custom_group.allowed_views.filter(view="day").exists()),
     None,
     "",
 )
 def day(request):
+    # find transports only from the current day
     transports = (
         Transport.find_objects_between_timestamps(
             datetime.today().replace(hour=0, minute=0, second=0),
@@ -232,6 +235,7 @@ def day(request):
         .filter(canceled=False)
     )
 
+    # active transport is the one that gets activated on frontend
     active_transport_id = None
     if request.GET.get("active_transport_id"):
         active_transport_id = int(request.GET.get("active_transport_id"))
@@ -256,15 +260,22 @@ class TableView(UserPassesTestMixin, ListView):
     template_name = "transports/table.html"
 
     def test_func(self):
+        """
+        Check whether the table view can be displayed to current user.
+        """
         user = self.request.user
         return (
-            user.is_superuser
+            user.is_authenticated
+            and (user.is_superuser
             or user.groups.first()
             .custom_group.allowed_views.filter(view="table")
-            .exists()
+            .exists())
         )
 
     def handle_no_permission(self):
+        """
+        Gets called when user does not pass the test function.
+        """
         messages.add_message(
             self.request, messages.ERROR, "Na zobrazenie tejto časti nemáte právomoc."
         )
@@ -288,6 +299,7 @@ class TableView(UserPassesTestMixin, ListView):
         return context
 
     def get(self, request, *args, **kwargs):
+        # if request was made from HTMX, use only partial template
         if self.request.htmx:
             self.template_name = "transports/elements/table/base.html"
 
@@ -298,6 +310,7 @@ def export(request, _format):
     if _format not in ["csv", "xlsx"]:
         return Http404()
 
+    # fetch all transports that correspond to filters
     qs = TransportFilter(
         request.GET,
         Transport.objects.all().select_related(
@@ -310,6 +323,7 @@ def export(request, _format):
     if _format == "csv":
         return FileResponse(open(filepath, "rb"))
 
+    # create excel export from already existing csv one
     wb = Workbook()
     with open(filepath, "r") as f:
         for row in csv.reader(f):
@@ -320,23 +334,36 @@ def export(request, _format):
 
 
 def _transport_csv_export(qs):
+    """
+    Create CSV export from provided queryset.
+    """
     filepath = pathlib.Path().resolve() / (
         "tmp/export-" + datetime.today().strftime("%Y-%m-%d-%H-%M-%S") + ".csv"
     )
+
+    # define fields
     ordered_fieldnames = OrderedDict(
         [(f.name, f.verbose_name) for f in Transport._meta.fields]
     )
 
+    # encoding set to utf-8-sig so that excel will now the encoding right away
     with open(filepath, "x", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=ordered_fieldnames, extrasaction="ignore")
 
+        #header
         writer.writerow(ordered_fieldnames)
+
+        #transports
         writer.writerows(qs)
 
     return filepath
 
 
 def _model_to_dict(instance: Transport):
+    """
+    Custom model to dict function, since the django one creates
+    *_id fields from relation fields, however we need names.
+    """
     d = {}
     for f in [x.name for x in Transport._meta.fields]:
         d[f] = getattr(instance, f).__str__()
@@ -345,28 +372,31 @@ def _model_to_dict(instance: Transport):
 
 
 def _get_default_transport_data():
-    transport_priority = cache.get("default_transport_priority_id")
-    if transport_priority is None:
+    """
+    Prefill form (Transport instance) with initial default values.
+    """
+    transport_priority_id = cache.get("default_transport_priority_id")
+    if transport_priority_id is None:
         transport_priority = TransportPriority.objects.filter(is_default=True).first()
 
         if transport_priority is None:
             raise RuntimeError("No default transport priority!")
 
-        transport_priority = transport_priority.pk
+        transport_priority_id = transport_priority.pk
 
-        cache.set("default_transport_priority_id", transport_priority, 600)
+        cache.set("default_transport_priority_id", transport_priority_id, 600)
 
-    transport_status = cache.get("default_transport_status_id")
-    if transport_status is None:
+    transport_status_id = cache.get("default_transport_status_id")
+    if transport_status_id is None:
         transport_status = TransportStatus.objects.filter(is_default=True).first()
 
         if transport_status is None:
             raise RuntimeError("No default transport status!")
 
-        transport_status = transport_status.pk
-        cache.set("default_transport_status_id", transport_status, 600)
+        transport_status_id = transport_status.pk
+        cache.set("default_transport_status_id", transport_status_id, 600)
 
     return {
-        "transport_priority": transport_priority,
-        "transport_status": transport_status,
+        "transport_priority_id": transport_priority_id,
+        "transport_status_id": transport_status_id,
     }

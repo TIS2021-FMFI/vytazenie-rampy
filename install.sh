@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 echo "*********************************"
 echo "1. Virtualne prostredie"
 
