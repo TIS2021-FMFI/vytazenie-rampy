@@ -1,0 +1,3 @@
+class_*.pdf su UML class diagramy k jednotlivym aplikaciam
+
+packages_*.pdf su diagramy o zavislostiach packagov v jednotlivych aplikaciach
