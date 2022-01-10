@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.cache import cache
 
 from django.db import models
+from django.utils import timezone
 from model_utils import FieldTracker
 from dateutil import parser
 
@@ -108,6 +109,13 @@ class Transport(models.Model):
                 }
             )
 
+        if self._state.adding and ((self.process_start and self.process_start < timezone.now()) or (self.process_finish and self.process_finish < timezone.now())):
+            raise ValidationError(
+                {
+                    "process_start": "Nie je možné vytvárať prepravy v minulosti.",
+                    "process_finish": "Nie je možné vytvárať prepravy v minulosti.",
+                }
+            )
 
 class CachedModel(models.Model):
     class Meta:

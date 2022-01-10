@@ -57,7 +57,7 @@ class TransportUpdate(APIView):
 
         if serializer.is_valid():
             tracker = TransportChangeTracker(
-                serializer.validated_data, transport, self.request.user, True
+                serializer.validated_data, transport, self.request.user
             )
 
             if not tracker.is_valid():

@@ -134,7 +134,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input type='hidden' value='False' name='{{ form.load.name }}'>
+                                {% if not form.load.field.widget.attrs.disabled %}
+                                    <input type='hidden' value='False' name='{{ form.load.name }}'>
+                                {% endif %}
                                 {{ form.load }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.load.id_for_label }}">Nakládka</label>
@@ -149,7 +151,9 @@
                         </div>
                         <div class="col">
                             <div class="form-check form-switch">
-                                <input type='hidden' value='False' name='{{ form.unload.name }}'>
+                                {% if not form.unload.field.widget.attrs.disabled %}
+                                    <input type='hidden' value='False' name='{{ form.unload.name }}'>
+                                {% endif %}
                                 {{ form.unload }}
                                 <div class="d-flex justify-content-between">
                                     <label class="form-check-label" for="{{ form.unload.id_for_label }}">Vykládka</label>
@@ -166,7 +170,9 @@
                 </div>
                 <div class="col">
                     <div class="form-check form-switch">
-                        <input type='hidden' value='False' name='{{ form.canceled.name }}'>
+                        {% if not form.canceled.field.widget.attrs.disabled %}
+                            <input type='hidden' value='False' name='{{ form.canceled.name }}'>
+                        {% endif %}
                         {{ form.canceled }}
                         <div class="d-flex justify-content-between">
                             <label class="form-check-label" for="{{ form.canceled.id_for_label }}">Zrušená</label>

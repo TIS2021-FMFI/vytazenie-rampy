@@ -19,6 +19,9 @@ filter_fields = {
 
 
 class TransportFilterForm(DefaultBootstrapForm):
+    """
+    Used for filtering transports. Used in table view.
+    """
     class Meta:
         model = Transport
         fields = filter_fields.keys()
@@ -32,6 +35,9 @@ boolean_choices = [
 
 
 class TransportFilter(FilterSet):
+    """
+    Filter class that is used to filter all transports by filters in request data.
+    """
     load = BooleanFilter(widget=widgets.Select(choices=boolean_choices))
     unload = BooleanFilter(widget=widgets.Select(choices=boolean_choices))
     canceled = BooleanFilter(widget=widgets.Select(choices=boolean_choices))

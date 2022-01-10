@@ -18,7 +18,7 @@ environ.Env.read_env(BASE_DIR / "main/.env")
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(" ")
 
 # Application definition
 
@@ -126,12 +126,14 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+if (env("STATIC_ROOT")):
+    STATIC_ROOT = env("STATIC_ROOT")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_DIRS = (BASE_DIR / "static",)
 
 AUTH_USER_MODEL = "accounts.CustomUser"

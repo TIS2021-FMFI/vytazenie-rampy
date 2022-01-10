@@ -13,6 +13,7 @@ from .models import (
 
 logger = logging.getLogger(__file__)
 
+# default field attributes used by bootstrap css framework
 default_attrs = {
     forms.Select: {"class": "form-select", "autocomplete": False},
     forms.NullBooleanSelect: {"class": "form-select", "autocomplete": False},
@@ -29,6 +30,9 @@ fk_fields = {
 
 
 class DefaultBootstrapForm(forms.ModelForm):
+    """
+    Form class that sets bootstrap attributes to its fields.
+    """
     def __init__(self, *args, **kwargs):
         super(DefaultBootstrapForm, self).__init__(*args, **kwargs)
 
@@ -58,26 +62,7 @@ class TransportForm(DefaultBootstrapForm):
     def __init__(self, user, *args, **kwargs):
         super(TransportForm, self).__init__(*args, **kwargs)
 
-        editable_fields = ()
-        for field in self.fields:
-            if user.has_perm(f"transports.edit_detailfield_{field}"):
-                editable_fields += (field,)
-
-        self.readonly_fields = tuple(
-            field for field in self.fields if field not in editable_fields
-        )
-
-        # ! in case of an emergency use the below code instead
-        # self.readonly_fields = ()
-        # user_group = str(user.groups.first().custom_group)
-        # if user_group == "Transport manažment":
-        #     self.readonly_fields = ("gate", "transport_status")
-        # elif user_group == "Predák":
-        #     self.readonly_fields = tuple(field for field in self.fields if field not in ("gate"))
-        # elif user_group == "Skladník":
-        #     self.readonly_fields = tuple(field for field in self.fields if field not in ("transport_status"))
-
-        self.apply_restrictions()
+        self._apply_restrictions(user)
 
         for field in fk_fields:
             self.fields[field].choices = self._get_model_choices(fk_fields[field])
@@ -85,6 +70,9 @@ class TransportForm(DefaultBootstrapForm):
                 self.fields[field].choices.insert(0, ("", "------"))
 
     def is_valid(self):
+        """
+        Sets styling for invalid form fields.
+        """
         is_valid = super(TransportForm, self).is_valid()
 
         if not is_valid:
@@ -96,6 +84,10 @@ class TransportForm(DefaultBootstrapForm):
         return is_valid
 
     def _get_model_choices(self, model):
+        """
+        Utility class to enhance form loading performance by caching
+        relation field available choices.
+        """
         cache_key = CachedModel.get_model_choices_cache_key(model)
         choices = cache.get_or_set(
             cache_key,
@@ -104,7 +96,24 @@ class TransportForm(DefaultBootstrapForm):
         )
         return choices
 
-    def apply_restrictions(self):
-        for field in self.readonly_fields:
+    def _apply_restrictions(self, user):
+        """
+        Disable form fields which cannot be edited by the current user.
+        """
+        for field in self.fields:
+            if user.has_perm(f"transports.edit_detailfield_{field}"):
+                continue
+
             self.fields[field].required = False
             self.fields[field].widget.attrs["disabled"] = "disabled"
+
+        # ! in case of an emergency use the below code instead, which relies
+        # on the user group name unlike the original solution which uses permissions
+        # self.readonly_fields = ()
+        # user_group = str(user.groups.first().custom_group)
+        # if user_group == "Transport manažment":
+        #     self.readonly_fields = ("gate", "transport_status")
+        # elif user_group == "Predák":
+        #     self.readonly_fields = tuple(field for field in self.fields if field not in ("gate"))
+        # elif user_group == "Skladník":
+        #     self.readonly_fields = tuple(field for field in self.fields if field not in ("transport_status"))

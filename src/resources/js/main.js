@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     var dateEl = document.querySelector('#week_day_text');
-    console.log(dateEl);
     var now = new Date();
     if (dateEl.innerText === "...") {
         dateEl.innerHTML = now.toLocaleDateString('sk');
