@@ -52,6 +52,11 @@
 <script>
     function fetchActiveTransportForm() {
         var activeTransport = $('.transport-row.active').first();
+
+        if (!activeTransport.data("transport-id")) {
+            return;
+        }
+
         htmx.ajax('GET', "{% url 'form-creation' %}" + activeTransport.data("transport-id"), {
             target: '#transport-detail-aside',
             swap: 'innerHTML',
