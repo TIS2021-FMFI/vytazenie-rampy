@@ -126,7 +126,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-if (env("STATIC_ROOT")):
+if env("STATIC_ROOT"):
     STATIC_ROOT = env("STATIC_ROOT")
 
 # Default primary key field type

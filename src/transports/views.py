@@ -159,7 +159,7 @@ def _create_latest_changes(changes):
     """
     Get last change on individual Transport fields.
     """
-    last_changes = { f.name: None for f in Transport._meta.fields if f.name != 'id' }
+    last_changes = {f.name: None for f in Transport._meta.fields if f.name != "id"}
 
     for change in reversed(changes[1:]):
         changes_dict = json.loads(change.changes)
@@ -189,9 +189,11 @@ def _create_latest_changes(changes):
 
 @user_passes_test(
     lambda user: user.is_authenticated
-        and (user.is_superuser
+    and (
+        user.is_superuser
         or user.has_perm("accounts.weekly_view")
-        or user.groups.first().custom_group.allowed_views.filter(view="week").exists()),
+        or user.groups.first().custom_group.allowed_views.filter(view="week").exists()
+    ),
     None,
     "",
 )
@@ -215,9 +217,11 @@ def week(request):
 
 @user_passes_test(
     lambda user: user.is_authenticated
-        and (user.is_superuser
+    and (
+        user.is_superuser
         or user.has_perm("accounts.daily_view")
-        or user.groups.first().custom_group.allowed_views.filter(view="day").exists()),
+        or user.groups.first().custom_group.allowed_views.filter(view="day").exists()
+    ),
     None,
     "",
 )
@@ -264,12 +268,11 @@ class TableView(UserPassesTestMixin, ListView):
         Check whether the table view can be displayed to current user.
         """
         user = self.request.user
-        return (
-            user.is_authenticated
-            and (user.is_superuser
+        return user.is_authenticated and (
+            user.is_superuser
             or user.groups.first()
             .custom_group.allowed_views.filter(view="table")
-            .exists())
+            .exists()
         )
 
     def handle_no_permission(self):
@@ -350,10 +353,10 @@ def _transport_csv_export(qs):
     with open(filepath, "x", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=ordered_fieldnames, extrasaction="ignore")
 
-        #header
+        # header
         writer.writerow(ordered_fieldnames)
 
-        #transports
+        # transports
         writer.writerows(qs)
 
     return filepath

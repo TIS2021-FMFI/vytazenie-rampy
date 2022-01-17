@@ -33,6 +33,7 @@ class DefaultBootstrapForm(forms.ModelForm):
     """
     Form class that sets bootstrap attributes to its fields.
     """
+
     def __init__(self, *args, **kwargs):
         super(DefaultBootstrapForm, self).__init__(*args, **kwargs)
 
