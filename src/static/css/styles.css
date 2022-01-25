@@ -259,6 +259,32 @@ a.logout_pic {
 /* detail extended changes */
 #show-changes {
     display: none;
+    position: relative;
+}
+
+#show-changes::before{
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 2px;
+    left: 20px;
+    background-color: black;
+    overflow: hidden;
+    top: 10px;
+}
+/* - For easier work on changes
+#show-changes ul li:nth-child(odd){
+    background-color: yellow;
+}
+*/
+#show-changes ul li::before{
+    content: "";
+    position: absolute;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    background-color: black;
+    left: 10px;
 }
 
 /* FORM SELECT */
@@ -419,3 +445,4 @@ a.logout_pic {
     border-color: var(--main-blue);
     box-shadow: 0 0 0 .25rem rgba(12, 26, 88, 0.5);
 }
+
