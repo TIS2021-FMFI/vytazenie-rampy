@@ -10,10 +10,13 @@ Na spustenie projektu na lokálnom počítači je potrebný Python 3.7 a vyšši
 1. Pre import základnej konfigurácie, bez ktorej nie je možné správne fungovanie aplikácie napíšte z koreňového adresára do príkazového riadka `python src/manage.py loaddata import/*`.
 Ak ste na Windowse, tak spustite príkazy v nasledovnom poradí.
 ```
+python src/manage.py loaddata import/gate.json
+python src/manage.py loaddata import/transportstatus.json
+python src/manage.py loaddata import/transportpriority.json
 python src/manage.py loaddata import/views.json
 python src/manage.py loaddata import/permissions.json
 python src/manage.py loaddata import/groups.json
-python src/manage.py loaddata import/custom_groups.json
+python src/manage.py loaddata import/customgroups.json
 ```
 
 2. Na vytvorenie administrátorského účtu spustite `python src/manage.py createsuperuser`.
