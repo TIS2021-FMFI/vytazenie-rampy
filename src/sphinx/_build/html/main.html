@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>main balíček &#8212; vytazenie rampy  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="transports balíček" href="transports.html" />
+    <link rel="prev" title="Dokumentácia projektu vyťaženie rampy - TIS 2021/22" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="main-balicek">
+<h1>main balíček<a class="headerlink" href="#main-balicek" title="Permalink to this headline">¶</a></h1>
+<p>Balíček <cite>main</cite> je základný balíček celého projektu. Obsahuje konfiguráciu projektu a vstupnú bránu pre prijímanie HTTP requestov od webserveru ako Gunicorn. Takisto obsahuje súbor <cite>.env</cite>, ktorý obsahuje konfiguráciu špecifickú pre runtime - to znamená, že každý užívateľ má túto konfiguráciu inú, keďže na produkcii je nastavená na produkčné nastavenia a každý developer si ju vyplnil inak, podľa svojho pripojenia na databázu.</p>
+<section id="submoduly">
+<h2>Submoduly<a class="headerlink" href="#submoduly" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="main-admin-modul">
+<h2>main.admin modul<a class="headerlink" href="#main-admin-modul" title="Permalink to this headline">¶</a></h2>
+<p>Obsahuje nadpisy v administrácii projektu. Umožňuje globálne upraviť administráciu oproti pôvodným nastaveniam od Djanga.</p>
+</section>
+<section id="main-apps-modul">
+<h2>main.apps modul<a class="headerlink" href="#main-apps-modul" title="Permalink to this headline">¶</a></h2>
+<p>Modul <cite>apps</cite> obsahuje dáta potrebné pre Django na správny beh. Nie je potrebné upravovať.</p>
+</section>
+<section id="main-asgi-modul">
+<h2>main.asgi modul<a class="headerlink" href="#main-asgi-modul" title="Permalink to this headline">¶</a></h2>
+<p>Modul obsahuje vstupnú bránu pre asynchrónny webserver, ktorý v tomto prípade nepoužívame.</p>
+</section>
+<section id="main-settings-module">
+<h2>main.settings module<a class="headerlink" href="#main-settings-module" title="Permalink to this headline">¶</a></h2>
+<p>Modul obsahuje všetku internú konfiguráciu Djanga - napr. pripojenie na databázu, miesto statických súborov, nastavenie logovania a podobne. Všetky nastavenia sú zdokumentované v dokumentácii Djanga.</p>
+</section>
+<section id="main-urls-module">
+<h2>main.urls module<a class="headerlink" href="#main-urls-module" title="Permalink to this headline">¶</a></h2>
+<p>Obsahuje základnú konfiguráciu routovania webovej aplikácie. Teda jednotlivé routy posúva do ďalších modulov, kde sa ďalej pripájajú na jednotlivé views.</p>
+</section>
+<section id="main-wsgi-module">
+<h2>main.wsgi module<a class="headerlink" href="#main-wsgi-module" title="Permalink to this headline">¶</a></h2>
+<p>Vstupná brána pre synchrónny webserver. Tento modul používa Gunicorn na pripojenie s Djangom.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">vytazenie rampy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Obsah:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">main balíček</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transports.html">transports balíček</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modifications.html">modifications balíček</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">api balíček</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accounts.html">accounts balíček</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manage.html">manage modul</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Dokumentácia projektu vyťaženie rampy - TIS 2021/22</a></li>
+      <li>Next: <a href="transports.html" title="next chapter">transports balíček</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Studentsky tim - Tvorba informacnych systemov.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/main.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

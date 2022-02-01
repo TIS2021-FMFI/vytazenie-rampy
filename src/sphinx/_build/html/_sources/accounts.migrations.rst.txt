@@ -1,0 +1,77 @@
+accounts.migrations package
+===========================
+
+Submodules
+----------
+
+accounts.migrations.0001\_initial module
+----------------------------------------
+
+.. automodule:: accounts.migrations.0001_initial
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0002\_auto\_20211029\_0646 module
+-----------------------------------------------------
+
+.. automodule:: accounts.migrations.0002_auto_20211029_0646
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0003\_auto\_20211204\_1037 module
+-----------------------------------------------------
+
+.. automodule:: accounts.migrations.0003_auto_20211204_1037
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0004\_alter\_customuser\_username module
+------------------------------------------------------------
+
+.. automodule:: accounts.migrations.0004_alter_customuser_username
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0005\_customgroup\_view module
+--------------------------------------------------
+
+.. automodule:: accounts.migrations.0005_customgroup_view
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0006\_alter\_customgroup\_group module
+----------------------------------------------------------
+
+.. automodule:: accounts.migrations.0006_alter_customgroup_group
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0007\_auto\_20211208\_2048 module
+-----------------------------------------------------
+
+.. automodule:: accounts.migrations.0007_auto_20211208_2048
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+accounts.migrations.0008\_alter\_customuser\_username module
+------------------------------------------------------------
+
+.. automodule:: accounts.migrations.0008_alter_customuser_username
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: accounts.migrations
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -8,6 +8,9 @@ from .models import CustomUser, CustomGroup, View
 
 
 class CustomUserAdmin(UserAdmin):
+    """
+    Customize user administration. Changed table view of users, changed fields showed while adding new user.
+    """
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
@@ -46,13 +49,23 @@ class CustomUserAdmin(UserAdmin):
 
 
 class CustomGroupInline(admin.StackedInline):
+    """
+    Used to be able to choose which Views user can access.
+    See models.py.
+    """
     model = CustomGroup
 
 
 class NewGroupAdmin(GroupAdmin):
+    """
+    Custom User Group administration. Added inline option to choose CustomGroup model.
+    See models.py.
+    """
     inlines = GroupAdmin.inlines + [CustomGroupInline]
 
-
+"""
+Administration registration.
+"""
 admin.site.register(CustomUser, CustomUserAdmin)
 
 admin.site.unregister(Group)
