@@ -6,6 +6,9 @@ from django.contrib.auth.views import LoginView
 
 # Create your views here.
 class CustomLoginView(LoginView):
+    """
+    View used to login users into app.
+    """
     redirect_authenticated_user = True
 
     def form_valid(self, form):

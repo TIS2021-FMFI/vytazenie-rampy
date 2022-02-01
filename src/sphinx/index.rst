@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Dokumentácia projektu vyťaženie rampy - TIS 2021/22
-===========================================
+===================================================
 
 Projekt je rozdelený do viacerých balíčkov, pričom niektoré prerážajú pôvodný kód z frameworku Django. Viac o balíčkoch je napísané v ich podstránkach.
 
@@ -19,5 +19,8 @@ Projekt je rozdelený do viacerých balíčkov, pričom niektoré prerážajú p
    api
    accounts
    manage
+
+   resources
+   templates
 
 

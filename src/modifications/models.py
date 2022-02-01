@@ -2,6 +2,9 @@ from django.db import models
 
 # Create your models here.
 class TransportModification(models.Model):
+    """
+    TransportModification model tracks changes on transports.
+    """
     transport = models.ForeignKey("transports.Transport", models.PROTECT)
     user = models.ForeignKey(
         "accounts.CustomUser", models.PROTECT, verbose_name="Používateľ"

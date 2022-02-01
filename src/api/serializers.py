@@ -8,6 +8,9 @@ from transports.models import (
     TransportStatus,
 )
 
+"""
+Serializers used to serialize models into JSON.
+"""
 
 class TransportPrioritySerializer(serializers.ModelSerializer):
     class Meta:
