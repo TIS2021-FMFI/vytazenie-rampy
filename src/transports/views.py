@@ -229,8 +229,8 @@ def day(request):
     # find transports only from the current day
     transports = (
         Transport.find_objects_between_timestamps(
-            datetime.today().replace(hour=0, minute=0, second=0),
-            datetime.today().replace(hour=23, minute=59, second=59),
+            datetime.today().replace(hour=0, minute=0, second=0, microsecond=0),
+            datetime.today().replace(hour=23, minute=59, second=59, microsecond=100000),
         )
         .select_related(
             "gate", "supplier", "carrier", "transport_priority", "transport_status"
