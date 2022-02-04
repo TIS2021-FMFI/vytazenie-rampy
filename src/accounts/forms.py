@@ -23,6 +23,7 @@ class CustomUserCreationForm(UserCreationForm):
     """
     Custom form used for user creation.
     """
+
     disabled_fields = ["username"]
 
     password1 = forms.CharField(
@@ -60,6 +61,7 @@ class CustomUserChangeForm(UserChangeForm):
     """
     Custom form used for editing users.
     """
+
     password = ReadOnlyPasswordHashField(
         label=_("Password"),
         help_text=_(

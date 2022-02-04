@@ -9,6 +9,7 @@ class CustomLoginView(LoginView):
     """
     View used to login users into app.
     """
+
     redirect_authenticated_user = True
 
     def form_valid(self, form):
