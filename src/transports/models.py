@@ -63,7 +63,9 @@ class Transport(models.Model):
             start = parser.parse(start)
             end = parser.parse(end)
 
-        return Transport.objects.filter(process_start__gte=start,process_start__lte=end)
+        return Transport.objects.filter(
+            process_start__gte=start, process_start__lte=end
+        )
 
     def __str__(self):
         start, end = self._format_datetime(self.process_start), self._format_datetime(
