@@ -18,7 +18,8 @@
     const base_host = '{{ request.scheme }}://{{ request.get_host }}';
     const perms = {
       calendar_history: {% if perms.accounts.calendar_history %}true{% else %}false{% endif %},
-      calendar_editable: {% if perms.accounts.calendar_editable %}true{% else %}false{% endif %}
+      calendar_editable: {% if perms.accounts.calendar_editable %}true{% else %}false{% endif %},
+      calendar_extended: {% if perms.accounts.calendar_extended and not request.user.is_superuser %}true{% else %}false{% endif %}
     };
 
     document.addEventListener('DOMContentLoaded', function () {
