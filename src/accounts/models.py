@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     """
     Overriden abstract user provided by Django. Changed some fields according to project needs.
     """
+
     is_superuser = models.BooleanField(
         _("administrátor"),
         default=False,
@@ -46,10 +47,12 @@ class View(models.Model):
     Used to restrict access to views. Every coded view now has an entity which represents it.
     This way we can control users' access to views without hardcoding it into project.
     """
+
     class ViewEnum(models.TextChoices):
         """
         Contains existing views coded in transports.views.
         """
+
         WEEK = "week", _("Týždeň")
         DEN = "day", _("Deň")
         TABULKA = "table", _("Tabuľka")
@@ -72,6 +75,7 @@ class CustomGroup(models.Model):
     Extends default Group model by adding associations to allowed views and default view,
     which shows after logging in.
     """
+
     group = models.OneToOneField(
         Group, models.CASCADE, verbose_name="Skupina", related_name="custom_group"
     )

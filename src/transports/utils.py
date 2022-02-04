@@ -11,6 +11,7 @@ logger = logging.getLogger(__file__)
 # Custom constant defining nothing. Standard None does not work.
 _NONE = "_NONE"
 
+
 class TransportChangeTracker:
     """
     Handles all change tracking on transport model instances.
@@ -81,8 +82,10 @@ class TransportChangeTracker:
                 if override_value is not _NONE
                 else getattr(instance, field)
             )
-        elif override_value is None: # Model's relation is changed from None to some value.
-            return '-'
+        elif (
+            override_value is None
+        ):  # Model's relation is changed from None to some value.
+            return "-"
 
         related_model = getattr(Transport, field).descriptor.field.related_model
         instances = related_model.fetch_instances()

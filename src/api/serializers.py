@@ -12,6 +12,7 @@ from transports.models import (
 Serializers used to serialize models into JSON.
 """
 
+
 class TransportPrioritySerializer(serializers.ModelSerializer):
     class Meta:
         model = TransportPriority
