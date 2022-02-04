@@ -8,7 +8,8 @@ from modifications.models import TransportModification
 from transports.models import Transport
 
 logger = logging.getLogger(__file__)
-
+# Custom constant defining nothing. Standard None does not work.
+_NONE = "_NONE"
 
 class TransportChangeTracker:
     """
@@ -69,7 +70,7 @@ class TransportChangeTracker:
                 ),  # default=str kedze datetime neni serializable
             ).save()
 
-    def _get_value(self, instance, field, override_value=None):
+    def _get_value(self, instance, field, override_value=_NONE):
         """
         Get instance's field value. Related fields (FK, M2M) return name of the related
         model instance.
@@ -77,9 +78,11 @@ class TransportChangeTracker:
         if "id" not in field:
             return (
                 override_value
-                if override_value is not None
+                if override_value is not _NONE
                 else getattr(instance, field)
             )
+        elif override_value is None: # Model's relation is changed from None to some value.
+            return '-'
 
         related_model = getattr(Transport, field).descriptor.field.related_model
         instances = related_model.fetch_instances()
@@ -87,7 +90,7 @@ class TransportChangeTracker:
         # if we don't want to access actual value in instance, but use the
         # provided one
         instance_id = (
-            override_value if override_value is not None else getattr(instance, field)
+            override_value if override_value is not _NONE else getattr(instance, field)
         )
 
         return instances.get(instance_id, instance_id)
