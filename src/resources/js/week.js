@@ -11,7 +11,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // calendar definition
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
+        initialView: perms.calendar_extended ? 'predakTimeGrid' : 'timeGridWeek',
+        views: {
+            predakTimeGrid: {
+                type: 'timeGridWeek',
+                duration: { days: 8},
+                dateAlignment: "week"
+            }
+        },
         headerToolbar: { // custom header
             start: null,
             center: null,
